@@ -1,37 +1,54 @@
-import { useAuth } from '../../../hooks/useAuth'
-import styles from './Header.module.scss'
-import { TiArrowLeft } from 'react-icons/ti'
-import Humburger from '../Hamburger/Hamburger'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { CiUser } from 'react-icons/ci'
+import { useState } from 'react'
+import './Header.scss'
+import { RxHamburgerMenu } from 'react-icons/rx'
+import { RxCross1 } from 'react-icons/rx'
 
-const Header = ({ backLink = '/' }) => {
-	const { pathname } = useLocation()
-	const navigate = useNavigate()
-
-	const { isAuth } = useAuth()
+const Header = () => {
+	let [burgerState, setBurgerState] = useState(false)
 
 	return (
-		<header className={styles.header}>
-			{pathname !== '/' ? (
-				<button
-					onClick={() => {
-						navigate(backLink)
-					}}
-				>
-					<TiArrowLeft />
-				</button>
-			) : (
-				<button
-					onClick={() => {
-						navigate(isAuth ? '/profile' : '/auth')
-					}}
-				>
-					<CiUser color='white' />
-				</button>
-			)}
-			{/* <UserProfile/> */}
-			<Humburger />
+		<header className='header'>
+			<div className='container'>
+				<div className='header__body'>
+					<a href='' className='header__logo'></a>
+					<div
+						onClick={() => setBurgerState(!burgerState)}
+						className={burgerState ? 'header__burger active' : 'header__burger'}
+					>
+						<span>
+							{!burgerState ? (
+								<RxHamburgerMenu size={'25px'} />
+							) : (
+								<RxCross1 size={'25px'} />
+							)}
+						</span>
+					</div>
+					<nav className={burgerState ? 'header__menu active' : 'header__menu'}>
+						<ul className='header__list'>
+							<li>
+								<a href='' className='header__link'>
+									Models
+								</a>
+							</li>
+							<li>
+								<a href='' className='header__link'>
+									Contacts
+								</a>
+							</li>
+							<li>
+								<a href='' className='header__link'>
+									Модели
+								</a>
+							</li>
+							<li>
+								<a href='' className='header__link'>
+									Контакты
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
 		</header>
 	)
 }

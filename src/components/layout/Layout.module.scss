@@ -1,11 +1,8 @@
 @import '../../assets/styles/variables';
 
 .wrapper {
-	display: flex;
-	justify-content: space-between;
-	flex-direction: column;
 	height: 100%;
-	max-width: 560px;
+	// max-width: 560px;
 	width: 100%;
 	padding: 25px;
 	margin: 0 auto;
@@ -13,14 +10,14 @@
 	background-size: cover;
 	background-position: center;
 
-	&.otherPage {
-		height: 280px;
-		border-radius: 0 0 20px 20px;
-		box-shadow: $bx-accent;
-		@media (max-width: $mobile) {
-			height: 260px !important;
-		}
-	}
+	// &.otherPage {
+	// 	height: 280px;
+	// 	border-radius: 0 0 20px 20px;
+	// 	box-shadow: $bx-accent;
+	// 	@media (max-width: $mobile) {
+	// 		height: 260px !important;
+	// 	}
+	// }
 }
 
 .heading {
