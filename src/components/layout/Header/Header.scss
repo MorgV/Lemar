@@ -1,11 +1,12 @@
 @import '../../../assets/styles/variables';
 
 header {
-	position: fixed;
+	position: absolute;
 	width: 100%;
 	top: 0;
 	left: 0;
 	z-index: 50;
+	transition: all 0.5s ease 0s;
 	&::before {
 		content: '';
 		position: absolute;
@@ -16,9 +17,14 @@ header {
 		background-color: transparent;
 	}
 }
-
+.header_fixed {
+	position: fixed;
+	background: $black;
+	padding: 10px 0;
+	// linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9))
+}
 .container {
-	max-width: 1180px;
+	max-width: 1280px;
 	margin: 0px auto;
 	padding: 0px 10px;
 }
@@ -51,7 +57,9 @@ header {
 }
 .header__list {
 	display: flex;
+
 	> li {
+		font-size: 20px;
 		margin-left: 20px;
 		list-style: none;
 	}
@@ -60,9 +68,13 @@ header {
 .header__link {
 	color: $accent;
 	text-decoration: none;
+	transition: all 0.3s ease 0s;
+	&:hover {
+		color: $white;
+	}
 }
 
-@media (max-width: 767px) {
+@media (max-width: $mobile) {
 	.header__body {
 		height: 70px;
 		align-items: center;
@@ -87,8 +99,8 @@ header {
 		padding: 100px 0 0 30px;
 		position: fixed;
 		left: 0;
-		top: -100vh;
-		width: 100%;
+		top: -200vh;
+		width: 110%;
 		height: 100%;
 		background-color: $black;
 		transition: all 0.3s ease 0s;
@@ -100,6 +112,15 @@ header {
 		display: block;
 		> li {
 			margin-bottom: 20px;
+		}
+	}
+}
+
+@media (max-width: 1010px) {
+	.header__list {
+		li {
+			margin-left: 10px;
+			font-size: 16px;
 		}
 	}
 }

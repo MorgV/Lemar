@@ -5,9 +5,18 @@ import { RxCross1 } from 'react-icons/rx'
 
 const Header = () => {
 	let [burgerState, setBurgerState] = useState(false)
+	window.addEventListener('scroll', () => {
+		const scrollPos = window.scrollY
+		const headerObg = document.getElementById('header')
 
+		if (scrollPos >= 1) {
+			headerObg.classList.add('header_fixed')
+		} else {
+			headerObg.classList.remove('header_fixed')
+		}
+	})
 	return (
-		<header className='header'>
+		<header id='header' className='header'>
 			<div className='container'>
 				<div className='header__body'>
 					<a href='' className='header__logo'></a>
@@ -27,22 +36,32 @@ const Header = () => {
 						<ul className='header__list'>
 							<li>
 								<a href='' className='header__link'>
-									Models
+									База моделей
 								</a>
 							</li>
 							<li>
 								<a href='' className='header__link'>
-									Contacts
+									Записаться
 								</a>
 							</li>
 							<li>
 								<a href='' className='header__link'>
-									Модели
+									О нас
 								</a>
 							</li>
 							<li>
 								<a href='' className='header__link'>
-									Контакты
+									Преподаватели
+								</a>
+							</li>
+							<li>
+								<a href='' className='header__link'>
+									Партнерам
+								</a>
+							</li>
+							<li>
+								<a href='' className='header__link'>
+									Наши услуги
 								</a>
 							</li>
 						</ul>

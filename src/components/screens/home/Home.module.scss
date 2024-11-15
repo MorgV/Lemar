@@ -1,7 +1,7 @@
 @import 'src/assets/styles/variables';
 
 .home {
-	min-height: 100vh;
+	height: 100vh;
 	&::before {
 		content: '';
 		position: absolute;
@@ -23,4 +23,104 @@
 	overflow: hidden;
 	object-fit: cover;
 	object-position: center;
+}
+.home__requestForm {
+	position: absolute;
+	z-index: 10;
+	width: 100%;
+
+	margin: 0 30% 0 0;
+	top: 25%;
+	padding: 0 30px;
+	h2 {
+		font-size: 40px;
+	}
+	h1 {
+		font-size: 200px;
+		margin-top: -90px;
+		font-family: serif;
+	}
+	h3 {
+		margin-top: -70px;
+		// max-width: 570px;
+		font-weight: normal;
+	}
+	.a {
+		margin-top: 30px;
+	}
+	a {
+		text-decoration: none;
+		background-color: $accent-blue;
+		padding: 15px 80px;
+		font-size: 18px;
+		color: $white;
+		border-radius: 40px;
+		border: none;
+		transition: all 0.3s ease 0s;
+		&:hover {
+			background-color: $accent;
+		}
+	}
+	@media (max-width: 1000px) {
+		text-align: center;
+		h2 {
+			font-size: 30px;
+		}
+		h1 {
+			font-size: 150px;
+			margin-top: -70px;
+			font-family: serif;
+		}
+		h3 {
+			margin-top: -50px;
+			font-size: 20px;
+		}
+		.a {
+			margin-top: 15px;
+		}
+		a {
+			padding: 10px 70px;
+			font-size: 17px;
+			border-radius: 40px;
+		}
+	}
+	@media (max-width: $mobile) {
+		h2 {
+			font-size: 25px;
+		}
+		h1 {
+			font-size: 130px;
+			margin-top: -60px;
+			font-family: serif;
+		}
+		h3 {
+			margin-top: -40px;
+			font-size: 18px;
+		}
+		a {
+			padding: 10px 50px;
+			font-size: 18px;
+			border-radius: 40px;
+		}
+	}
+	@media (max-width: 473px) {
+		h2 {
+			font-size: 20px;
+		}
+		h1 {
+			font-size: 100px;
+			margin-top: -40px;
+			font-family: serif;
+		}
+		h3 {
+			margin-top: -20px;
+			font-size: 16px;
+		}
+
+		a {
+			padding: 10px 30px;
+			font-size: 16px;
+			border-radius: 40px;
+		}
+	}
 }
