@@ -13,7 +13,7 @@ export const routes = [
 		isAuth: false
 	},
 	{
-		path: '/models',
+		path: 'Lemar/models',
 		component: Models,
 		isAuth: false
 	}
