@@ -3,12 +3,12 @@ import Models from '../components/screens/Models/Models'
 
 export const routes = [
 	{
-		path: '/',
+		path: '/Lemar',
 		component: Home,
 		isAuth: false
 	},
 	{
-		path: '/models',
+		path: 'Lemar/models',
 		component: Models,
 		isAuth: false
 	}
