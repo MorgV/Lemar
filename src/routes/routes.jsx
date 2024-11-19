@@ -8,7 +8,7 @@ const Router = () => {
 	// const { isAuth } = useAuth()
 
 	return (
-		<BrowserRouter>
+		<BrowserRouter basename='/Lemar'>
 			<Routes>
 				{routes.map(route => {
 					// if (route.isAuth && !isAuth) {

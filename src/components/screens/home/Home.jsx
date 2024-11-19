@@ -13,7 +13,7 @@ function Home() {
 			<Header />
 			<div className={styles.home}>
 				<video
-					src='Lemar/video/vidio.mp4'
+					src='/video/vidio.mp4'
 					playsInline
 					muted
 					autoPlay
