@@ -13,7 +13,11 @@ const Footer = () => {
 	// 		headerObg.classList.remove('header_fixed')
 	// 	}
 	// })
-	return <footer id='header' className='header'></footer>
+	return (
+		<footer id='header' className='header'>
+			footer
+		</footer>
+	)
 }
 
 export default Footer

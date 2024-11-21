@@ -8,8 +8,12 @@ function ModelsVS() {
 		<Layout bgImage={'/images/home-bg.jpg'}>
 			<div className={styles.wrapper}>
 				<div className={styles.vs}>
-					<a className={styles.boy}></a>
-					<a className={styles.girl}></a>
+					<a className={styles.boy}>
+						<h1>Boys</h1>
+					</a>
+					<a className={styles.girl}>
+						<h1>Girls</h1>
+					</a>
 				</div>
 			</div>
 		</Layout>

@@ -1,6 +1,5 @@
 import Layout from '../../layout/Layout'
 import styles from './Home.module.scss'
-import Header from '../../layout/Header/Header'
 import ModelsVS from '../../layout/ModelsVS/ModelsVS'
 import Onas from '../../layout/Onas/Onas'
 import Footer from '../../layout/Footer/Footer'

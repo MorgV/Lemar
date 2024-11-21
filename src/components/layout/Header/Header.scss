@@ -108,6 +108,7 @@ header {
 	}
 	.header__menu.active {
 		top: 0;
+		transition: all 0.7s ease 0s;
 	}
 	.header__list {
 		display: block;
