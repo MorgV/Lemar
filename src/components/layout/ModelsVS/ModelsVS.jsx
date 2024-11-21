@@ -6,7 +6,12 @@ function ModelsVS() {
 	// const navigate = useNavigate()
 	return (
 		<Layout bgImage={'/images/home-bg.jpg'}>
-			<div className={styles.wrapper}>ModelsVS</div>
+			<div className={styles.wrapper}>
+				<div className={styles.vs}>
+					<a className={styles.boy}></a>
+					<a className={styles.girl}></a>
+				</div>
+			</div>
 		</Layout>
 	)
 }

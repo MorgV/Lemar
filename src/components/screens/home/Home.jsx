@@ -10,10 +10,9 @@ function Home() {
 
 	return (
 		<Layout>
-			<Header />
 			<div className={styles.home}>
 				<video
-					src='/video/vidio.mp4'
+					src='Lemar/video/vidio.mp4'
 					playsInline
 					muted
 					autoPlay

@@ -9,7 +9,7 @@ const Header = () => {
 		const scrollPos = window.scrollY
 		const headerObg = document.getElementById('header')
 
-		if (scrollPos >= 1) {
+		if (scrollPos >= 300) {
 			headerObg.classList.add('header_fixed')
 		} else {
 			headerObg.classList.remove('header_fixed')

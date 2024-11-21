@@ -20,7 +20,8 @@ header {
 .header_fixed {
 	position: fixed;
 	background: $black;
-	padding: 10px 0;
+	padding: 10px;
+	width: 100%;
 	// linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9))
 }
 .container {
@@ -29,6 +30,7 @@ header {
 	padding: 0px 10px;
 }
 .header__body {
+	margin-top: 10px;
 	position: relative;
 	z-index: 2;
 	display: flex;
@@ -37,9 +39,7 @@ header {
 	align-items: center;
 }
 .header__logo {
-	content: '123';
-	margin-top: 30px;
-	width: 20%;
+	min-width: 200px;
 	height: 100%;
 	background-image: url('/images/logo.png');
 	background-position: center;
@@ -54,6 +54,8 @@ header {
 	transition: all 0.3s ease 0s;
 }
 .header__menu {
+	white-space: nowrap;
+	overflow: hidden;
 }
 .header__list {
 	display: flex;
@@ -76,7 +78,6 @@ header {
 
 @media (max-width: $mobile) {
 	.header__body {
-		height: 70px;
 		align-items: center;
 	}
 	.header__logo {
@@ -96,7 +97,7 @@ header {
 		}
 	}
 	.header__menu {
-		padding: 100px 0 0 30px;
+		padding: 150px 0 0 30px;
 		position: fixed;
 		left: 0;
 		top: -200vh;
@@ -113,6 +114,12 @@ header {
 		> li {
 			margin-bottom: 20px;
 		}
+	}
+	.header__link {
+		font-size: 25px;
+	}
+	.header__logo {
+		width: 5%;
 	}
 }
 
