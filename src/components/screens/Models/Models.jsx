@@ -5,7 +5,7 @@ function Models() {
 	// const { isAuth } = useAuth()
 	// const navigate = useNavigate()
 	return (
-		<Layout bgImage={'/images/home-bg.jpg'}>
+		<Layout>
 			<div className=''>Models</div>
 		</Layout>
 	)
