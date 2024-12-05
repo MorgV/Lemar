@@ -42,7 +42,7 @@
 	font-weight: 600;
 	font-size: 15px;
 	line-height: 127%;
-	color: #222;
+	color: #fff; // верхний титул
 }
 
 .rating {
@@ -54,21 +54,21 @@
 	font-size: 15px;
 	line-height: 127%;
 	text-align: right;
-	color: #222;
+	color: #fff; // звездочка
 }
 
 .desc {
 	font-weight: 400;
 	font-size: 15px;
 	line-height: 127%;
-	color: #717171;
+	color: #ffffffc0; //2 тит
 }
 
 .date {
 	font-weight: 400;
 	font-size: 13px;
 	line-height: 146%;
-	color: #717171;
+	color: #717171; // 3 титул
 }
 
 .price {
@@ -77,7 +77,7 @@
 	font-weight: 400;
 	font-size: 15px;
 	line-height: 127%;
-	color: #222;
+	color: #222; //цена
 
 	strong {
 		font-weight: 600;

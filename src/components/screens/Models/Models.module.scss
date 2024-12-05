@@ -1,1 +1,16 @@
 @import 'src/assets/styles/variables';
+.main__cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+	gap: 40px 24px;
+}
+.container {
+	width: 100%;
+	max-width: 1310px;
+
+	margin: 0 auto;
+	padding: 15px;
+}
+.main {
+	margin-top: 100px;
+}

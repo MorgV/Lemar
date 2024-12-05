@@ -1,23 +1,17 @@
-import starIcon from './star.svg';
-import styles from './style.module.scss';
+import starIcon from './star.svg'
+import styles from './style.module.scss'
+import boysPhoto from '../../../../../../public/images/boy.jpg'
 
 const Card = ({ data }) => {
-	const {
-		title,
-		desc,
-		rating,
-		price_per_night,
-		dates_available,
-		img,
-		img2x,
-	} = data;
+	const { title, desc, rating, price_per_night, dates_available, img, img2x } =
+		data
 
 	return (
 		<article className={styles.card}>
-			<a href="#" className={styles.link}></a>
+			<a href='#' className={styles.link}></a>
 			<img
 				src={data.img}
-				srcSet={`${data.img2x} 2x`}
+				srcSet={boysPhoto}
 				alt={data.title}
 				className={styles.img}
 			/>
@@ -26,7 +20,7 @@ const Card = ({ data }) => {
 				<div className={styles.titleWrapper}>
 					<h3 className={styles.title}>{title}</h3>
 					<div className={styles.rating}>
-						<img src={starIcon} alt="starIcon" />
+						<img src={starIcon} alt='starIcon' />
 						{data.rating}
 					</div>
 				</div>
@@ -39,7 +33,7 @@ const Card = ({ data }) => {
 				</p>
 			</div>
 		</article>
-	);
-};
+	)
+}
 
-export default Card;
+export default Card

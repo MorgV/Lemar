@@ -6,7 +6,7 @@
 		"price_per_night": 388,
 		"dates_available": "Apr 16 – 21",
 		"img": "./img/objects/01.jpg",
-		"img2x": "./img/objects/01@2x.jpg"
+		"img2x": "/images/home-bg.jpg"
 	},
 	{
 		"title": "Sevierville, Tennessee",

@@ -1,5 +1,5 @@
 import Layout from '../../layout/Layout'
-// import styles from './Models.module.scss';
+import styles from './Models.module.scss'
 import Card from './ModelsUI/Card/Card'
 import cardsData from '../../../data/data.json'
 
@@ -8,9 +8,9 @@ function Models() {
 	// const navigate = useNavigate()
 	return (
 		<Layout>
-			<main className='main'>
+			<main className={styles.main}>
 				<div className='container'>
-					<div className='main__cards'>
+					<div className={styles.main__cards}>
 						{cardsData.map((item, index) => {
 							return <Card data={item} key={index} />
 						})}

@@ -5,7 +5,7 @@ function ModelsVS() {
 	// const { isAuth } = useAuth()
 	// const navigate = useNavigate()
 	return (
-		<Layout bgImage={'/images/home-bg.jpg'}>
+		<Layout>
 			<div className={styles.wrapper}>
 				<div className={styles.vs}>
 					<a className={styles.boy}>

@@ -19,7 +19,7 @@ const Header = () => {
 		<header id='header' className='header'>
 			<div className='container'>
 				<div className='header__body'>
-					<a href='' className='header__logo'></a>
+					<a href='/' className='header__logo'></a>
 					<div
 						onClick={() => setBurgerState(!burgerState)}
 						className={burgerState ? 'header__burger active' : 'header__burger'}
@@ -40,7 +40,7 @@ const Header = () => {
 								</a>
 							</li>
 							<li>
-								<a href='' className='header__link'>
+								<a href='/' className='header__link'>
 									Записаться
 								</a>
 							</li>
