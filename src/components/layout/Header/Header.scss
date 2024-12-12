@@ -86,6 +86,9 @@ header {
 		align-items: center;
 	}
 	.header__logo {
+		transform: scale(0.7);
+		transform-origin: left;
+		margin-left: 10px;
 		width: 200px;
 		z-index: 3;
 	}
@@ -102,7 +105,7 @@ header {
 		}
 	}
 	.header__menu {
-		padding: 150px 0 0 30px;
+		padding: 120px 0 0 30px;
 		position: fixed;
 		left: 0;
 		top: -200vh;
@@ -127,7 +130,7 @@ header {
 		}
 	}
 	.header__link {
-		font-size: 25px;
+		font-size: 20px;
 	}
 	.header__logo {
 		width: 5%;
@@ -145,7 +148,7 @@ header {
 
 	.hamburger svg {
 		/* The size of the SVG defines the overall size */
-		height: 3em;
+		height: 2.5em;
 		/* Define the transition for transforming the SVG */
 		transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
 	}

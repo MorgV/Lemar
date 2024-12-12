@@ -50,6 +50,7 @@ h3 {
 html,
 body {
 	height: 100%;
+	overflow-x: hidden;
 }
 
 body {
@@ -61,7 +62,6 @@ body {
 	min-width: 320px;
 	position: relative;
 	line-height: 1.65;
-	overflow-x: hidden;
 }
 
 img {
