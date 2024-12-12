@@ -16,6 +16,11 @@ const Header = () => {
 		}
 		//className clsn
 	})
+
+	const heandlerSwapBurger = () => {
+		document.body.style.overflow = burgerState ? '' : 'hidden'
+		setBurgerState(!burgerState)
+	}
 	return (
 		<header id='header' className='header'>
 			<div className='container'>
@@ -34,10 +39,7 @@ const Header = () => {
 						</span>
 					</div> */}
 					<label className='hamburger'>
-						<input
-							type='checkbox'
-							onChange={() => setBurgerState(!burgerState)}
-						/>
+						<input type='checkbox' onChange={() => heandlerSwapBurger()} />
 						<svg viewBox='0 0 32 32'>
 							<path
 								className='line line-top-bottom'
