@@ -129,6 +129,7 @@ header {
 	}
 	// burger animation
 	.hamburger {
+		display: block;
 		cursor: pointer;
 		z-index: 2;
 	}
