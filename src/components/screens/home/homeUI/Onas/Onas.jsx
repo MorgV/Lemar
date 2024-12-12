@@ -1,8 +1,8 @@
 import { useRef } from 'react'
-import Layout from '../Layout'
+import Layout from '../../../../layout/Layout'
 import styles from './Onas.module.scss'
-import { motion, useInView } from 'motion/react'
-import Motion from '../../UI/motion/Motion'
+import { useInView } from 'motion/react'
+import Motion from '../../../../UI/motion/Motion'
 
 const Onas = () => {
 	// const { isAuth } = useAuth()
