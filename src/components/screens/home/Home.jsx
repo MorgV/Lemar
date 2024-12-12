@@ -3,13 +3,14 @@ import styles from './Home.module.scss'
 import ModelsVS from '../../layout/ModelsVS/ModelsVS'
 import Onas from '../../layout/Onas/Onas'
 import Footer from '../../layout/Footer/Footer'
+
 function Home() {
 	// const { isAuth } = useAuth()
 	// const navigate = useNavigate()
 
 	return (
 		<Layout>
-			<div className={styles.home}>
+			{/* <div className={styles.home}>
 				<video
 					src='Lemar/video/vidio.mp4'
 					playsInline
@@ -29,7 +30,7 @@ function Home() {
 						<a href='https://taplink.cc/lemar_models'>Оставить заявку</a>
 					</div>{' '}
 				</div>
-			</div>
+			</div> */}
 			<Onas />
 			<ModelsVS />
 			<Footer />

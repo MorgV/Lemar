@@ -1,5 +1,5 @@
-import Home from '../components/screens/Home/Home'
-import Models from '../components/screens/Models/Models'
+import Home from '../../components/screens/Home/Home'
+import Models from '../../components/screens/Models/Models'
 
 export const routes = [
 	{

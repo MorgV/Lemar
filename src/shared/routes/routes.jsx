@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 import { routes } from './routes.data'
-import NotFound from '../components/screens/NotFound/NotFound'
+import NotFound from '../../components/screens/NotFound/NotFound'
 // import { useAuth } from '../hooks/useAuth'
 
 const Router = () => {
