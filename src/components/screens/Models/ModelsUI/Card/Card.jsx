@@ -3,33 +3,33 @@ import styles from './style.module.scss'
 import boysPhoto from '../../../../../../public/images/boy.jpg'
 
 const Card = ({ data }) => {
-	const { title, desc, rating, price_per_night, dates_available, img, img2x } =
-		data
-
+	const { height, shoeSize, gender, FI, age } = data
 	return (
 		<article className={styles.card}>
 			<a href='#' className={styles.link}></a>
 			<img
-				src={data.img}
+				src={
+					'https://www.google.com/url?sa=i&url=https%3A%2F%2Fmimigram.ru%2Fblog%2Fchto-takoe-foto-tekhnologiya-ili-iskusstvo%2F&psig=AOvVaw26qOZz3vTC5dWXu2yf7zUy&ust=1734470998276000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCOCBrY-erYoDFQAAAAAdAAAAABAJ'
+				}
 				srcSet={boysPhoto}
-				alt={data.title}
+				alt={FI}
 				className={styles.img}
 			/>
 
 			<div className={styles.descWrapper}>
 				<div className={styles.titleWrapper}>
-					<h3 className={styles.title}>{title}</h3>
+					<h3 className={styles.title}>{FI}</h3>
 					<div className={styles.rating}>
 						<img src={starIcon} alt='starIcon' />
-						{data.rating}
+						{gender[0]}
 					</div>
 				</div>
 
-				<p className={styles.desc}>{data.desc}</p>
-				<p className={styles.date}>{data.dates_available}</p>
+				<p className={styles.desc}>{age}</p>
+				<p className={styles.date}>{shoeSize}</p>
 
 				<p className={styles.price}>
-					<strong>${data.price_per_night}</strong> night
+					<strong>${height}</strong> night
 				</p>
 			</div>
 		</article>
