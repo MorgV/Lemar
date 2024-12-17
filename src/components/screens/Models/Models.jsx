@@ -4,12 +4,10 @@ import Card from './ModelsUI/Card/Card'
 // import cardsData from '../../../data/data.json'
 import axios from 'axios'
 import { useEffect } from 'react'
+import { useQuery } from '@tanstack/react-query'
 
 function Models() {
-	// const { isAuth } = useAuth()
-	// const navigate = useNavigate()
 	let models = []
-
 	const getModels = async (page = 1, perPage = 1, searchStroke = '') => {
 		try {
 			const response = await axios.get('http://localhost:5000/Lemar/models', {
@@ -47,15 +45,24 @@ function Models() {
 		console.log('first')
 	}, [])
 
-	// let cardsData = models.map(el => {
-	// 	console.log(el)
-	// })
+	const { data, error, isPending } = useQuery({
+		queryKey: ['models', 'list'],
+		queryFn: getModels
+	})
+
+	if (isPending) {
+		return <div>Loading...</div>
+	}
+	if (error) {
+		return <div>error : {error}</div>
+	}
+
 	return (
 		<Layout>
 			<main className={styles.main}>
 				<div className='container'>
 					<div className={styles.main__cards}>
-						{models.map((item, index) => {
+						{data.map((item, index) => {
 							return <Card data={item} key={index} />
 						})}
 					</div>
