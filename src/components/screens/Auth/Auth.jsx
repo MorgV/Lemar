@@ -1,66 +1,79 @@
+import { useNavigate } from 'react-router-dom'
 import Layout from '../../layout/Layout'
+import './Auth.scss'
 import { useForm } from 'react-hook-form'
-import Button from '../../UI/button/Button'
-import Field from '../../UI/field/Field'
-import Loader from '../../UI/Loader'
-import styles from './Auth.module.scss'
-import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import authService from '../../../services/auth.service'
-
-const isLoadingAuth = true
-
+// import { useState } from 'react'
+import { ADMIN_ROUTE } from '@/utils/constans'
 const Auth = () => {
+	// const [isLoginAuth, setIsLoginAuth] = useState(false)
+	const navigate = useNavigate()
+
 	const {
 		register,
 		handleSubmit,
 		formState: { errors }
-	} = useForm({
-		mode: 'onChange'
-	})
-	const [type, setType] = useState('auth')
-
-	const { mutate, isLoading } = useMutation((email, password) =>
-		authService.main(email, password, type)
-	)
+	} = useForm()
 
 	const onSubmit = data => {
-		mutate(data.email, data.password)
+		console.log('Form Data: ', data)
+		// setIsLoginAuth(true)
+		navigate(ADMIN_ROUTE)
+		// alert('Форма отправлена!')
 	}
 
 	return (
-		<>
-			<Layout heading='Sign in' />
-			<div className='wrapper-inner-page'>
-				{(isLoading || isLoadingAuth) && <Loader />}
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<Field
-						error={errors.email?.message}
-						name='email'
-						register={register}
-						options={{
-							required: 'Email is required'
-						}}
-						type='text'
-						placeholder='Enter email'
-					/>
-					<Field
-						error={errors.password?.message}
-						name='password'
-						register={register}
-						options={{
-							required: 'Password is required'
-						}}
-						type='password'
-						placeholder='Enter password'
-					/>
-					<div className={styles.wrapperButtons}>
-						<Button clickHandler={() => setType('auth')}>Sign in</Button>
-						<Button clickHandler={() => setType('auth')}>Sign up</Button>
+		<Layout>
+			<div className='form-container'>
+				<form onSubmit={handleSubmit(onSubmit)} className='form'>
+					{/* Поле для email */}
+					<div className='form-group'>
+						<label htmlFor='email'>Email:</label>
+						<input
+							id='email'
+							type='email'
+							placeholder='Введите ваш email'
+							{...register('email', {
+								required: 'Email обязателен',
+								pattern: {
+									value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+									message: 'Некорректный email'
+								}
+							})}
+							className={errors.email ? 'input-error' : ''}
+						/>
+						{errors.email && (
+							<p className='error-message'>{errors.email.message}</p>
+						)}
 					</div>
+
+					{/* Поле для пароля */}
+					<div className='form-group'>
+						<label htmlFor='password'>Пароль:</label>
+						<input
+							id='password'
+							type='password'
+							placeholder='Введите пароль'
+							{...register('password', {
+								required: 'Пароль обязателен',
+								minLength: {
+									value: 6,
+									message: 'Пароль должен содержать минимум 6 символов'
+								}
+							})}
+							className={errors.password ? 'input-error' : ''}
+						/>
+						{errors.password && (
+							<p className='error-message'>{errors.password.message}</p>
+						)}
+					</div>
+
+					{/* Кнопка отправки */}
+					<button type='submit' className='submit-button'>
+						Отправить
+					</button>
 				</form>
 			</div>
-		</>
+		</Layout>
 	)
 }
 

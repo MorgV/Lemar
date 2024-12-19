@@ -11,7 +11,6 @@ const Layout = ({ children, bgImage, heading = '' }) => {
 			style={{ backgroundImage: `url(${bgImage})` }}
 		>
 			<Header />
-
 			{children && <div>{children}</div>}
 		</section>
 	)

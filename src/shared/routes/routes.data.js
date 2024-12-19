@@ -1,15 +1,27 @@
 import Home from '../../components/screens/Home/Home'
 import Models from '../../components/screens/Models/Models'
+import Auth from '../../components/screens/Auth/Auth.jsx'
+import Admin from '../../components/screens/Admin/Admin.jsx'
 
 export const routes = [
 	{
-		path: '/Lemar',
+		path: '/',
 		component: Home,
 		isAuth: false
 	},
 	{
-		path: '/Lemar/models',
+		path: '/models',
 		component: Models,
+		isAuth: false
+	},
+	{
+		path: '/auth',
+		component: Auth,
+		isAuth: false
+	},
+	{
+		path: '/admin',
+		component: Admin,
 		isAuth: false
 	}
 ]
