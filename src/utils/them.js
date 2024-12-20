@@ -1,5 +1,11 @@
 import { createTheme } from '@mui/material/styles'
 const theme = createTheme({
+	palette: {
+		text: {
+			primary: '#111', // Цвет основного текста
+			secondary: '#01959f' // Цвет вторичного текста
+		}
+	},
 	components: {
 		MuiTab: {
 			styleOverrides: {
@@ -15,6 +21,26 @@ const theme = createTheme({
 			styleOverrides: {
 				indicator: {
 					backgroundColor: '#01959f' // Цвет индикатора под активной вкладкой
+				}
+			}
+		},
+		MuiTextField: {
+			styleOverrides: {
+				root: {
+					'& .MuiOutlinedInput-root': {
+						'& fieldset': {
+							borderColor: 'white' // Цвет обводки
+						},
+						'&:hover fieldset': {
+							borderColor: 'white' // Цвет обводки при наведении
+						},
+						'&.Mui-focused fieldset': {
+							borderColor: '#b53471' // Цвет обводки при фокусе
+						}
+					},
+					'& .MuiInputBase-input': {
+						color: 'white' // Цвет текста #01959f
+					}
 				}
 			}
 		}

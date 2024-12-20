@@ -23,23 +23,6 @@ function Models() {
 		}
 	}
 
-	// const newModels = async (
-	// 	height = 113,
-	// 	shoeSize = 36,
-	// 	gender = 'woman',
-	// 	FI = 'e Han',
-	// 	age = 17
-	// ) => {
-	// 	const res = await axios.post('http://localhost:5000/Lemar/models', {
-	// 		height,
-	// 		shoeSize,
-	// 		gender,
-	// 		FI,
-	// 		age
-	// 	})
-	// 	return res
-	// }
-
 	useEffect(() => {
 		getModels().then(modelsArray => (models = modelsArray)) // здесь лежат модели но не отрисовываются так как стейт менеджера нет
 		console.log('first')
