@@ -1,27 +1,18 @@
-import {
-	Box,
-	Button,
-	Card,
-	CardMedia,
-	FormHelperText,
-	Grid,
-	IconButton,
-	TextField,
-	Typography,
-	CloseIcon
-} from '@mui/material'
-import axios from 'axios'
+import { Box, Button, TextField, Typography } from '@mui/material'
+import ImageModal from './ImageModal/ImageModal'
+import clsx from 'clsx'
 import { useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import axios from 'axios'
 
 const FormInput = () => {
 	const [errors, setErrors] = useState({
 		firstName: '',
-		lastName: '',
 		height: '',
 		shoeSize: '',
 		gender: '',
 		age: '',
-		imgFile: ''
+		imageProfile: ''
 	})
 	const [inputs, setInputs] = useState({
 		firstName: '',
@@ -29,57 +20,29 @@ const FormInput = () => {
 		shoeSize: '',
 		gender: '',
 		age: '',
-		imgFile: ''
+		imageProfile: ''
 	})
-	const [imageList, setImageList] = useState()
+	const [imageList, setImageList] = useState([])
+	const [isModalOpen, setModalOpen] = useState(false)
 
+	// Handle input change for form fields
 	const handleInputChange = e => {
 		const { name, value } = e.target
 		setInputs({
 			...inputs,
 			[name]: value
 		})
-
-		// Simple validation
 		if (value === '') {
-			setErrors({
-				...errors,
-				[name]: `${name} обязательно`
-			})
+			setErrors({ ...errors, [name]: `${name} обязательно` })
 		} else {
-			setErrors({
-				...errors,
-				[name]: ''
-			})
+			setErrors({ ...errors, [name]: '' })
 		}
-		if (name == 'imgFile') {
-			console.log(e.target.files[0])
-			setImageList(e.target.files[0])
-		}
-		console.log(inputs, imageList)
 	}
 
-	const newModels = async ({
-		imageList,
-		height = 113,
-		shoeSize = 36,
-		gender = 'woman',
-		firstName: FI = 'e Han',
-		age = 17
-	}) => {
-		console.log(imageList, height, shoeSize, gender, FI, age)
-
-		// Если вы хотите отправить запрос
-		const formData = new FormData()
-		formData.append('imageList', imageList)
-		formData.append('height', height)
-		formData.append('shoeSize', shoeSize)
-		formData.append('gender', gender)
-		formData.append('firstName', FI)
-		formData.append('age', age)
-
-		try {
-			const res = await axios.post(
+	// Mutation for form submission
+	const mutation = useMutation({
+		mutationFn: async formData => {
+			const response = await axios.post(
 				'http://localhost:5000/Lemar/models',
 				formData,
 				{
@@ -88,40 +51,58 @@ const FormInput = () => {
 					}
 				}
 			)
-			return res
-		} catch (error) {
-			console.error('Ошибка при сохранении модели:', error)
+			return response.data
+		},
+		mutationKey: ['create', 'model'],
+		onSuccess: data => {
+			alert('Success:', data)
+		},
+		onError: error => {
+			alert('Error:', error)
 		}
-	}
+	})
 
+	// Handle form submission
 	const handleSubmit = e => {
 		e.preventDefault()
-
-		// Проверка всех полей
 		const newErrors = {}
 		if (!inputs.firstName) newErrors.firstName = 'Фамилия Имя обязательно'
 		if (!inputs.height) newErrors.height = 'Рост обязателен'
 		if (!inputs.shoeSize) newErrors.shoeSize = 'Размер обуви обязателен'
 		if (!inputs.gender) newErrors.gender = 'Пол обязателен'
 		if (!inputs.age) newErrors.age = 'Возраст обязателен'
-		if (!inputs.imgFile) newErrors.imgFile = 'Изображение обязательно'
+		if (!inputs.imageProfile)
+			newErrors.imageProfile = 'Фото для профиля обязательно'
+		if (imageList.length === 0) newErrors.imageList = 'Введите картинку'
 
 		setErrors(newErrors)
 
-		// Если есть ошибки, форма не отправляется
 		if (Object.keys(newErrors).length > 0) {
 			return
 		}
 
-		// Передаем imgFile отдельно как imageList
-		newModels({
-			imageList: inputs.imgFile, // imgFile передается как imageList
-			height: inputs.height,
-			shoeSize: inputs.shoeSize,
-			gender: inputs.gender,
-			firstName: inputs.firstName,
-			age: inputs.age
+		const formData = new FormData()
+		formData.append('firstName', inputs.firstName)
+		formData.append('height', inputs.height)
+		formData.append('shoeSize', inputs.shoeSize)
+		formData.append('gender', inputs.gender)
+		formData.append('age', inputs.age)
+
+		// Add profile image to formData
+		if (inputs.imageProfile instanceof File) {
+			formData.append('imageProfile', inputs.imageProfile)
+		}
+
+		// Add all images in the imageList to formData
+		let imgCount = 0
+		imageList.forEach((image, index) => {
+			imgCount++
+			formData.append(`images[${index}]`, image)
 		})
+		formData.append('imgCount', imgCount)
+
+		console.log(formData)
+		mutation.mutate(formData)
 	}
 
 	return (
@@ -130,8 +111,7 @@ const FormInput = () => {
 				style={{
 					height: '100%',
 					display: 'flex',
-					flexDirection: 'column',
-					position: 'relative'
+					flexDirection: 'column'
 				}}
 				onSubmit={handleSubmit}
 			>
@@ -143,7 +123,7 @@ const FormInput = () => {
 					onChange={handleInputChange}
 					error={!!errors.firstName}
 					helperText={errors.firstName}
-					sx={{ width: '100%', marginBottom: '10px' }}
+					sx={{ width: '100%', mb: 2 }}
 				/>
 				<TextField
 					name='height'
@@ -154,7 +134,7 @@ const FormInput = () => {
 					onChange={handleInputChange}
 					error={!!errors.height}
 					helperText={errors.height}
-					sx={{ width: '100%', marginBottom: '10px' }}
+					sx={{ width: '100%', mb: 2 }}
 				/>
 				<TextField
 					name='shoeSize'
@@ -165,7 +145,7 @@ const FormInput = () => {
 					onChange={handleInputChange}
 					error={!!errors.shoeSize}
 					helperText={errors.shoeSize}
-					sx={{ width: '100%', marginBottom: '10px' }}
+					sx={{ width: '100%', mb: 2 }}
 				/>
 				<TextField
 					name='gender'
@@ -175,7 +155,7 @@ const FormInput = () => {
 					onChange={handleInputChange}
 					error={!!errors.gender}
 					helperText={errors.gender}
-					sx={{ width: '100%', marginBottom: '10px' }}
+					sx={{ width: '100%', mb: 2 }}
 				/>
 				<TextField
 					name='age'
@@ -186,84 +166,69 @@ const FormInput = () => {
 					onChange={handleInputChange}
 					error={!!errors.age}
 					helperText={errors.age}
-					sx={{ width: '100%', marginBottom: '10px' }}
+					sx={{ width: '100%', mb: 2 }}
 				/>
-				<Box
+
+				{/* Image Profile Button */}
+				<Button
+					variant='outlined'
+					onClick={() => setModalOpen(true)}
 					sx={{
-						marginBottom: '10px',
-						display: 'flex',
-						flexDirection: 'column'
+						mb: 2,
+						color: errors.imageProfile ? 'red' : '#01959f',
+						borderColor: errors.imageProfile ? 'red' : 'white'
 					}}
+					className={clsx({
+						'red-button': errors.imageProfile
+					})}
 				>
-					<Button
-						variant='outlined'
-						component='label'
+					{!errors.imageProfile || !errors.imageList
+						? 'Выбрать изображения'
+						: `${errors.imageProfile}, ${errors.imageList}`}
+				</Button>
+
+				{/* Display selected profile image below button */}
+				{inputs.imageProfile && (
+					<Box
 						sx={{
 							display: 'flex',
+							flexDirection: 'column',
 							alignItems: 'center',
-							justifyContent: 'center',
-							padding: '20px',
-							color: '#01959f',
-							borderColor: 'white'
+							mb: 2
 						}}
 					>
-						{inputs.imgFile ? (
-							<Typography>{inputs.imgFile}</Typography>
-						) : (
-							<Typography>Загрузите изображение</Typography>
-						)}
-						<input
-							type='file'
-							name='imgFile'
-							accept='image/*'
-							onChange={handleInputChange}
-							hidden
+						<Typography variant='body1' color='textSecondary'>
+							Выбранное изображение профиля:
+						</Typography>
+						<img
+							src={URL.createObjectURL(inputs.imageProfile)}
+							alt='Profile'
+							style={{
+								width: '120px',
+								height: '120px',
+								objectFit: 'cover',
+								borderRadius: '8px',
+								marginTop: '8px'
+							}}
 						/>
-					</Button>
-					{errors.imgFile && (
-						<FormHelperText error>{errors.imgFile}</FormHelperText>
-					)}
-					{/* Кнопка открытия модального окна */}
-					{/* <Button
-						variant='outlined'
-						color='primary'
-						onClick={() => setIsModalOpen(true)}
-						sx={{ marginBottom: '10px' }}
-					>
-						Добавить изображения
-					</Button>
+					</Box>
+				)}
 
-					{/* Отображение ошибок */}
-					{/* {errors.imageList && (
-						<FormHelperText error>{errors.imageList}</FormHelperText>
-					)}{' '} */}
-
-					{/* Отображение загруженных изображений */}
-					{/* <Grid container spacing={2} sx={{ marginBottom: '10px' }}>
-						{imageList.map((image, index) => (
-							<Grid item key={index} xs={4}>
-								<Card>
-									<CardMedia
-										component='img'
-										height='140'
-										image={URL.createObjectURL(image)}
-										alt={`Image ${index + 1}`}
-									/>
-									<IconButton
-										onClick={() => handleRemoveImage(index)}
-										sx={{ position: 'absolute', top: 0, right: 0 }}
-									>
-										<CloseIcon />
-									</IconButton>
-								</Card>
-							</Grid>
-						))}
-					</Grid> */}
-				</Box>
-				<Button type='submit' variant='contained' color='primary'>
-					Сохранить
+				<Button type='submit' variant='contained' disabled={mutation.isLoading}>
+					{mutation.isLoading ? 'Сохранение...' : 'Сохранить'}
 				</Button>
 			</form>
+			<ImageModal
+				open={isModalOpen}
+				onClose={() => setModalOpen(false)}
+				onSave={({ images, imageProfile }) => {
+					setImageList(images)
+					setInputs({
+						...inputs,
+						imageProfile: imageProfile
+					})
+				}}
+			/>
 		</Box>
 	)
 }

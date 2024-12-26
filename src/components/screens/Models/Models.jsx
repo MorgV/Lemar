@@ -8,20 +8,20 @@ import { useQuery } from '@tanstack/react-query'
 
 function Models() {
 	let models = []
-	const getModels = async (page = 1, perPage = 1, searchStroke = '') => {
-		try {
-			const response = await axios.get('http://localhost:5000/Lemar/models', {
-				page,
-				perPage,
-				searchStroke
-			})
-			const myArray = response.data // Данные из запроса
-			return myArray // Вернуть массив, если нужно
-		} catch (error) {
-			console.error('Ошибка:', error)
-			return []
-		}
-	}
+	// const getModels = async (page = 1, perPage = 1, searchStroke = '') => {
+	// 	try {
+	// 		const response = await axios.get('http://localhost:5000/Lemar/models', {
+	// 			page,
+	// 			perPage,
+	// 			searchStroke
+	// 		})
+	// 		const myArray = response.data // Данные из запроса
+	// 		return myArray // Вернуть массив, если нужно
+	// 	} catch (error) {
+	// 		console.error('Ошибка:', error)
+	// 		return []
+	// 	}
+	// }
 
 	useEffect(() => {
 		getModels().then(modelsArray => (models = modelsArray)) // здесь лежат модели но не отрисовываются так как стейт менеджера нет
