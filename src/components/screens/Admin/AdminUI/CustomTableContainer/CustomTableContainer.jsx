@@ -7,11 +7,11 @@ import {
 	TableHead,
 	TableRow,
 	Paper,
-	Checkbox,
 	IconButton,
 	TablePagination
 } from '@mui/material'
 import { useState } from 'react'
+import { getAll } from '../../../../../shared/api/axios-request'
 
 const CustomTableContainer = ({ searchQuery }) => {
 	const [selected, setSelected] = useState([])
@@ -20,6 +20,13 @@ const CustomTableContainer = ({ searchQuery }) => {
 	const [sortDirection, setSortDirection] = useState('asc')
 	const [sortBy, setSortBy] = useState('id')
 
+	const models = getAll('/models', {
+		page: 1,
+		perPage: 5,
+		searchStroke: '123'
+	})
+	console.log(models)
+	// models.map(el => console.log(el))
 	const rows = [
 		{
 			id: 1,
@@ -104,15 +111,6 @@ const CustomTableContainer = ({ searchQuery }) => {
 		}
 	]
 
-	const handleSelectAllClick = event => {
-		if (event.target.checked) {
-			const newSelected = rows.map(row => row.id)
-			setSelected(newSelected)
-			return
-		}
-		setSelected([])
-	}
-
 	const handleClick = id => {
 		const selectedIndex = selected.indexOf(id)
 		let newSelected = []
@@ -156,8 +154,6 @@ const CustomTableContainer = ({ searchQuery }) => {
 		console.log('Delete row with id:', id) // You can implement delete functionality here
 	}
 
-	const isSelected = id => selected.indexOf(id) !== -1
-
 	// Filter rows based on search query
 	const filteredRows = rows.filter(row => {
 		const searchText = searchQuery.toLowerCase()
@@ -185,15 +181,6 @@ const CustomTableContainer = ({ searchQuery }) => {
 			<Table>
 				<TableHead>
 					<TableRow>
-						<TableCell padding='checkbox'>
-							<Checkbox
-								indeterminate={
-									selected.length > 0 && selected.length < rows.length
-								}
-								checked={rows.length > 0 && selected.length === rows.length}
-								onChange={handleSelectAllClick}
-							/>
-						</TableCell>
 						<TableCell>
 							<div style={{ display: 'flex', alignItems: 'center' }}>
 								ID
@@ -273,18 +260,13 @@ const CustomTableContainer = ({ searchQuery }) => {
 					{sortedRows
 						.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 						.map(row => {
-							const isItemSelected = isSelected(row.id)
 							return (
 								<TableRow
 									key={row.id}
 									hover
 									role='checkbox'
 									onClick={() => handleClick(row.id)}
-									selected={isItemSelected}
 								>
-									<TableCell padding='checkbox'>
-										<Checkbox checked={isItemSelected} />
-									</TableCell>
 									<TableCell>{row.id}</TableCell>
 									<TableCell>{`${row.lastName} ${row.firstName}`}</TableCell>
 									<TableCell>{row.height} cm</TableCell>
