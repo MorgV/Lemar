@@ -1,4 +1,4 @@
-import { ArrowDownward, ArrowUpward, Delete, Edit } from '@mui/icons-material'
+import { useCallback, useMemo, useState } from 'react'
 import {
 	Table,
 	TableBody,
@@ -10,171 +10,90 @@ import {
 	IconButton,
 	TablePagination
 } from '@mui/material'
-import { useState } from 'react'
+import { ArrowDownward, ArrowUpward, Delete, Edit } from '@mui/icons-material'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { getAll } from '../../../../../shared/api/axios-request'
+import TableRowMemo from './TableRow/TableRow'
+import clsx from 'clsx'
 
 const CustomTableContainer = ({ searchQuery }) => {
-	const [selected, setSelected] = useState([])
-	const [page, setPage] = useState(0)
-	const [rowsPerPage, setRowsPerPage] = useState(5) // Default rows per page
-	const [sortDirection, setSortDirection] = useState('asc')
-	const [sortBy, setSortBy] = useState('id')
-
-	const models = getAll('/models', {
-		page: 1,
-		perPage: 5,
-		searchStroke: '123'
+	const [tableParams, setTableParams] = useState({
+		page: 0,
+		rowsPerPage: 5,
+		sortBy: 'id',
+		sortDirection: 'asc'
 	})
-	console.log(models)
-	// models.map(el => console.log(el))
-	const rows = [
-		{
-			id: 1,
-			lastName: 'Snow',
-			firstName: 'Jon',
-			height: 180,
-			shoeSize: 42,
-			gender: 'Male',
-			age: 35
-		},
-		{
-			id: 2,
-			lastName: 'Lannister',
-			firstName: 'Cersei',
-			height: 165,
-			shoeSize: 38,
-			gender: 'Female',
-			age: 42
-		},
-		{
-			id: 3,
-			lastName: 'Lannister',
-			firstName: 'Jaime',
-			height: 185,
-			shoeSize: 44,
-			gender: 'Male',
-			age: 45
-		},
-		{
-			id: 4,
-			lastName: 'Stark',
-			firstName: 'Arya',
-			height: 160,
-			shoeSize: 37,
-			gender: 'Female',
-			age: 16
-		},
-		{
-			id: 5,
-			lastName: 'Targaryen',
-			firstName: 'Daenerys',
-			height: 170,
-			shoeSize: 39,
-			gender: 'Female',
-			age: 25
-		},
-		{
-			id: 6,
-			lastName: 'Melisandre',
-			firstName: 'None',
-			height: 160,
-			shoeSize: 38,
-			gender: 'Female',
-			age: 150
-		},
-		{
-			id: 7,
-			lastName: 'Clifford',
-			firstName: 'Ferrara',
-			height: 175,
-			shoeSize: 41,
-			gender: 'Male',
-			age: 44
-		},
-		{
-			id: 8,
-			lastName: 'Frances',
-			firstName: 'Rossini',
-			height: 168,
-			shoeSize: 40,
-			gender: 'Female',
-			age: 36
-		},
-		{
-			id: 9,
-			lastName: 'Roxie',
-			firstName: 'Harvey',
-			height: 172,
-			shoeSize: 43,
-			gender: 'Male',
-			age: 65
-		}
-	]
 
-	const handleClick = id => {
-		const selectedIndex = selected.indexOf(id)
-		let newSelected = []
-
-		if (selectedIndex === -1) {
-			newSelected = newSelected.concat(selected, id)
-		} else if (selectedIndex === 0) {
-			newSelected = newSelected.concat(selected.slice(1))
-		} else if (selectedIndex === selected.length - 1) {
-			newSelected = newSelected.concat(selected.slice(0, -1))
-		} else if (selectedIndex > 0) {
-			newSelected = newSelected.concat(
-				selected.slice(0, selectedIndex),
-				selected.slice(selectedIndex + 1)
-			)
-		}
-
-		setSelected(newSelected)
+	// Функция для обновления tableParams
+	const updateTableParams = updates => {
+		setTableParams(prev => ({ ...prev, ...updates }))
 	}
 
+	// const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
+	const fetchModels = useCallback(
+		async ({ signal }) => {
+			// await delay(1000) // задержка 2 сек
+
+			const response = await getAll(
+				'/models',
+				{
+					params: {
+						page: tableParams.page + 1, // API pages are 1-based
+						perPage: tableParams.rowsPerPage,
+						search: searchQuery,
+						sortBy: tableParams.sortBy,
+						sortDirection: tableParams.sortDirection
+					}
+				},
+				signal
+			)
+			console.log(response)
+			return response
+		},
+		[tableParams, searchQuery]
+	)
+
+	const { data, isPending, isError, isFetching } = useQuery({
+		queryKey: ['models', 'list', tableParams, searchQuery],
+		queryFn: fetchModels,
+		gcTime: 1000,
+		placeholderData: keepPreviousData
+	})
+
+	console.log(data)
+
 	const handleChangePage = (event, newPage) => {
-		setPage(newPage)
+		updateTableParams({ page: newPage })
 	}
 
 	const handleChangeRowsPerPage = event => {
-		setRowsPerPage(parseInt(event.target.value, 10))
-		setPage(0) // Reset to the first page when changing rows per page
+		updateTableParams({
+			rowsPerPage: parseInt(event.target.value, 10),
+			page: 0
+		})
+		console.log('handleChangeRowsPerPage')
 	}
 
 	const handleSort = column => {
-		const isAsc = sortBy === column && sortDirection === 'asc'
-		setSortDirection(isAsc ? 'desc' : 'asc')
-		setSortBy(column)
+		const isAsc =
+			tableParams.sortBy === column && tableParams.sortDirection === 'asc'
+		updateTableParams({
+			sortDirection: isAsc ? 'desc' : 'asc',
+			sortBy: column
+		})
 	}
 
 	const handleEdit = id => {
-		console.log('Edit row with id:', id) // You can implement editing functionality here
+		console.log('Edit row with id:', id)
 	}
 
 	const handleDelete = id => {
-		console.log('Delete row with id:', id) // You can implement delete functionality here
+		console.log('Delete row with id:', id)
 	}
 
-	// Filter rows based on search query
-	const filteredRows = rows.filter(row => {
-		const searchText = searchQuery.toLowerCase()
-		return (
-			row.firstName.toLowerCase().includes(searchText) ||
-			row.lastName.toLowerCase().includes(searchText) ||
-			row.age.toString().includes(searchText) ||
-			row.gender.toLowerCase().includes(searchText)
-		)
-	})
-
-	// Sort rows based on selected column and direction
-	const sortedRows = [...filteredRows].sort((a, b) => {
-		if (a[sortBy] < b[sortBy]) {
-			return sortDirection === 'asc' ? -1 : 1
-		}
-		if (a[sortBy] > b[sortBy]) {
-			return sortDirection === 'asc' ? 1 : -1
-		}
-		return 0
-	})
+	if (isPending) return <span>Loading...</span>
+	if (isError) return <span>Error loading data</span>
 
 	return (
 		<TableContainer component={Paper}>
@@ -182,124 +101,105 @@ const CustomTableContainer = ({ searchQuery }) => {
 				<TableHead>
 					<TableRow>
 						<TableCell>
-							<div style={{ display: 'flex', alignItems: 'center' }}>
+							<span style={{ display: 'flex', alignItems: 'center' }}>
 								ID
 								<IconButton onClick={() => handleSort('id')}>
-									{sortBy === 'id' && sortDirection === 'asc' ? (
+									{tableParams.sortBy === 'id' &&
+									tableParams.sortDirection === 'asc' ? (
 										<ArrowUpward fontSize='small' />
 									) : (
 										<ArrowDownward fontSize='small' />
 									)}
 								</IconButton>
-							</div>
+							</span>
 						</TableCell>
 						<TableCell>
-							<div style={{ display: 'flex', alignItems: 'center' }}>
+							<span style={{ display: 'flex', alignItems: 'center' }}>
 								Фамилия Имя
-								<IconButton onClick={() => handleSort('lastName')}>
-									{sortBy === 'lastName' && sortDirection === 'asc' ? (
+								<IconButton onClick={() => handleSort('FI')}>
+									{tableParams.sortBy === 'FI' &&
+									tableParams.sortDirection === 'asc' ? (
 										<ArrowUpward fontSize='small' />
 									) : (
 										<ArrowDownward fontSize='small' />
 									)}
 								</IconButton>
-							</div>
+							</span>
 						</TableCell>
 						<TableCell>
-							<div style={{ display: 'flex', alignItems: 'center' }}>
+							<span style={{ display: 'flex', alignItems: 'center' }}>
 								Рост
 								<IconButton onClick={() => handleSort('height')}>
-									{sortBy === 'height' && sortDirection === 'asc' ? (
+									{tableParams.sortBy === 'height' &&
+									tableParams.sortDirection === 'asc' ? (
 										<ArrowUpward fontSize='small' />
 									) : (
 										<ArrowDownward fontSize='small' />
 									)}
 								</IconButton>
-							</div>
+							</span>
 						</TableCell>
 						<TableCell>
-							<div style={{ display: 'flex', alignItems: 'center' }}>
+							<span style={{ display: 'flex', alignItems: 'center' }}>
 								Размер обуви
 								<IconButton onClick={() => handleSort('shoeSize')}>
-									{sortBy === 'shoeSize' && sortDirection === 'asc' ? (
+									{tableParams.sortBy === 'shoeSize' &&
+									tableParams.sortDirection === 'asc' ? (
 										<ArrowUpward fontSize='small' />
 									) : (
 										<ArrowDownward fontSize='small' />
 									)}
 								</IconButton>
-							</div>
+							</span>
 						</TableCell>
 						<TableCell>
-							<div style={{ display: 'flex', alignItems: 'center' }}>
+							<span style={{ display: 'flex', alignItems: 'center' }}>
 								Пол
 								<IconButton onClick={() => handleSort('gender')}>
-									{sortBy === 'gender' && sortDirection === 'asc' ? (
+									{tableParams.sortBy === 'gender' &&
+									tableParams.sortDirection === 'asc' ? (
 										<ArrowUpward fontSize='small' />
 									) : (
 										<ArrowDownward fontSize='small' />
 									)}
 								</IconButton>
-							</div>
+							</span>
 						</TableCell>
 						<TableCell>
-							<div style={{ display: 'flex', alignItems: 'center' }}>
+							<span style={{ display: 'flex', alignItems: 'center' }}>
 								Возраст
 								<IconButton onClick={() => handleSort('age')}>
-									{sortBy === 'age' && sortDirection === 'asc' ? (
+									{tableParams.sortBy === 'age' &&
+									tableParams.sortDirection === 'asc' ? (
 										<ArrowUpward fontSize='small' />
 									) : (
 										<ArrowDownward fontSize='small' />
 									)}
 								</IconButton>
-							</div>
+							</span>
 						</TableCell>
 						<TableCell>Actions</TableCell>
 					</TableRow>
 				</TableHead>
-				<TableBody>
-					{sortedRows
-						.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-						.map(row => {
-							return (
-								<TableRow
-									key={row.id}
-									hover
-									role='checkbox'
-									onClick={() => handleClick(row.id)}
-								>
-									<TableCell>{row.id}</TableCell>
-									<TableCell>{`${row.lastName} ${row.firstName}`}</TableCell>
-									<TableCell>{row.height} cm</TableCell>
-									<TableCell>{row.shoeSize} EU</TableCell>
-									<TableCell>{row.gender}</TableCell>
-									<TableCell>{row.age}</TableCell>
-									<TableCell>
-										<IconButton
-											onClick={() => handleEdit(row.id)}
-											color='primary'
-										>
-											<Edit />
-										</IconButton>
-										<IconButton
-											onClick={() => handleDelete(row.id)}
-											color='secondary'
-										>
-											<Delete />
-										</IconButton>
-									</TableCell>
-								</TableRow>
-							)
-						})}
+				<TableBody style={isFetching ? { opacity: 0.6 } : {}}>
+					{data?.models?.map(row => (
+						<TableRowMemo
+							key={row.id}
+							row={row}
+							handleEdit={handleEdit}
+							handleDelete={handleDelete}
+						/>
+					))}
 				</TableBody>
 			</Table>
 			<TablePagination
-				rowsPerPageOptions={[5, 10, 20]} // Options for rows per page
-				component='div'
-				count={filteredRows.length}
-				rowsPerPage={rowsPerPage}
-				page={page}
+				rowsPerPageOptions={[1, 5, 10, 20]}
+				component='span'
+				count={data?.total || 0}
+				rowsPerPage={tableParams.rowsPerPage}
+				page={tableParams.page}
 				onPageChange={handleChangePage}
-				onRowsPerPageChange={handleChangeRowsPerPage} // Handle change in rows per page
+				onRowsPerPageChange={handleChangeRowsPerPage}
 			/>
 		</TableContainer>
 	)

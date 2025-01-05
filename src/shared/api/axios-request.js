@@ -12,11 +12,15 @@ const apiClient = axios.create({
 })
 
 // Функция для GET-запроса
-export const getAll = async (endpoint, params = {}) => {
+export const getAll = async (endpoint, params = {}, { signal }) => {
 	try {
-		const models = await apiClient.get(endpoint, {
-			params
-		})
+		const models = await apiClient.get(
+			endpoint,
+			{
+				params
+			},
+			signal
+		)
 		return models.data
 	} catch (error) {
 		console.error('Ошибка при выполнении GET-запроса:', error)
@@ -34,3 +38,27 @@ export const postData = async (endpoint, data) => {
 		throw error
 	}
 }
+
+// export const fetchModels = async ({
+// 	signal,
+// 	page,
+// 	rowsPerPage,
+// 	searchQuery,
+// 	sortBy,
+// 	sortDirection
+// }) => {
+// 	const response = await getAll(
+// 		'/models',
+// 		{
+// 			params: {
+// 				page: page + 1, // API pages are 1-based
+// 				perPage: rowsPerPage,
+// 				search: searchQuery,
+// 				sortBy,
+// 				sortDirection
+// 			}
+// 		},
+// 		signal
+// 	)
+// 	return response
+// }
