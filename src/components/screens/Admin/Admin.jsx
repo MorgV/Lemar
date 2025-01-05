@@ -38,11 +38,10 @@ const Admin = () => {
 				<Tabs
 					value={value}
 					onChange={handleChange}
-					aria-label='Пример вкладок'
 					textColor='primary'
 					indicatorColor='primary'
 				>
-					<Tab label='Пункт Первый' id='tab-0' aria-controls='tabpanel-0' />
+					<Tab label='Модели' id='tab-0' aria-controls='tabpanel-0' />
 					<Tab label='Пункт Два' id='tab-1' aria-controls='tabpanel-1' />
 					<Tab label='Пункт Третий' id='tab-2' aria-controls='tabpanel-2' />
 				</Tabs>

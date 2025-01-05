@@ -1,11 +1,19 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
+import {
+	Box,
+	Button,
+	TextField,
+	Typography,
+	Select,
+	MenuItem,
+	FormControl,
+	InputLabel
+} from '@mui/material'
 import ImageModal from './ImageModal/ImageModal'
-import clsx from 'clsx'
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 
-const FormInput = () => {
+const FormInput = ({ editData, onFormSubmit }) => {
 	const [errors, setErrors] = useState({
 		firstName: '',
 		height: '',
@@ -43,7 +51,7 @@ const FormInput = () => {
 	const mutation = useMutation({
 		mutationFn: async formData => {
 			const response = await axios.post(
-				'http://localhost:5000/Lemar/models',
+				'http://localhost:5000/models',
 				formData,
 				{
 					headers: {
@@ -55,10 +63,32 @@ const FormInput = () => {
 		},
 		mutationKey: ['create', 'model'],
 		onSuccess: data => {
-			alert('Success:', data)
+			// Reset form data including images after successful form submission
+			setTimeout(() => {
+				// Reset the form inputs and images
+				setInputs({
+					firstName: '',
+					height: '',
+					shoeSize: '',
+					gender: '',
+					age: '',
+					imageProfile: ''
+				})
+				setErrors({
+					firstName: '',
+					height: '',
+					shoeSize: '',
+					gender: '',
+					age: '',
+					imageProfile: ''
+				})
+				setImageList([]) // Clear the image list
+				setModalOpen(false) // Close the modal
+				alert('Данные успешно сохранены!')
+			}, 1000)
 		},
 		onError: error => {
-			alert('Error:', error)
+			alert('Ошибка:', error)
 		}
 	})
 
@@ -101,7 +131,6 @@ const FormInput = () => {
 		})
 		formData.append('imgCount', imgCount)
 
-		console.log(formData)
 		mutation.mutate(formData)
 	}
 
@@ -147,16 +176,32 @@ const FormInput = () => {
 					helperText={errors.shoeSize}
 					sx={{ width: '100%', mb: 2 }}
 				/>
-				<TextField
-					name='gender'
-					label='Пол'
+
+				{/* Gender selection (dropdown) */}
+				<FormControl
+					fullWidth
 					variant='outlined'
-					value={inputs.gender}
-					onChange={handleInputChange}
+					sx={{ mb: 2 }}
 					error={!!errors.gender}
-					helperText={errors.gender}
-					sx={{ width: '100%', mb: 2 }}
-				/>
+				>
+					<InputLabel>Пол</InputLabel>
+					<Select
+						name='gender'
+						value={inputs.gender}
+						onChange={handleInputChange}
+						label='Пол'
+					>
+						<MenuItem value=''>
+							<em>Выберите пол</em>
+						</MenuItem>
+						<MenuItem value='Мужской'>Мужской</MenuItem>
+						<MenuItem value='Женский'>Женский</MenuItem>
+					</Select>
+					{errors.gender && (
+						<Typography color='error'>{errors.gender}</Typography>
+					)}
+				</FormControl>
+
 				<TextField
 					name='age'
 					label='Возраст'
@@ -178,9 +223,6 @@ const FormInput = () => {
 						color: errors.imageProfile ? 'red' : '#01959f',
 						borderColor: errors.imageProfile ? 'red' : 'white'
 					}}
-					className={clsx({
-						'red-button': errors.imageProfile
-					})}
 				>
 					{!errors.imageProfile || !errors.imageList
 						? 'Выбрать изображения'

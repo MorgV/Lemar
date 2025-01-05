@@ -11,12 +11,12 @@ import {
 	TablePagination
 } from '@mui/material'
 import { ArrowDownward, ArrowUpward, Delete, Edit } from '@mui/icons-material'
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { getAll } from '../../../../../shared/api/axios-request'
+import { keepPreviousData, useQuery, useMutation } from '@tanstack/react-query'
+import { getAll, deleteModel } from '../../../../../shared/api/axios-request'
 import TableRowMemo from './TableRow/TableRow'
-import clsx from 'clsx'
+import apiClient from '../../../../../shared/api/axios-request'
 
-const CustomTableContainer = ({ searchQuery }) => {
+const CustomTableContainer = ({ searchQuery, setEditData }) => {
 	const [tableParams, setTableParams] = useState({
 		page: 0,
 		rowsPerPage: 5,
@@ -29,39 +29,32 @@ const CustomTableContainer = ({ searchQuery }) => {
 		setTableParams(prev => ({ ...prev, ...updates }))
 	}
 
-	// const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+	// const fetchModels = useCallback(
+	// 	async ({ signal }) => {
+	// 		const response = await getAll(
+	// 			'/models',
+	// 			{
+	// 				params: {
+	// 					page: tableParams.page + 1, // API pages are 1-based
+	// 					perPage: tableParams.rowsPerPage,
+	// 					search: searchQuery,
+	// 					sortBy: tableParams.sortBy,
+	// 					sortDirection: tableParams.sortDirection
+	// 				}
+	// 			},
+	// 			signal
+	// 		)
+	// 		return response
+	// 	},
+	// 	[tableParams, searchQuery]
+	// )
 
-	const fetchModels = useCallback(
-		async ({ signal }) => {
-			// await delay(1000) // задержка 2 сек
-
-			const response = await getAll(
-				'/models',
-				{
-					params: {
-						page: tableParams.page + 1, // API pages are 1-based
-						perPage: tableParams.rowsPerPage,
-						search: searchQuery,
-						sortBy: tableParams.sortBy,
-						sortDirection: tableParams.sortDirection
-					}
-				},
-				signal
-			)
-			console.log(response)
-			return response
-		},
-		[tableParams, searchQuery]
-	)
-
-	const { data, isPending, isError, isFetching } = useQuery({
-		queryKey: ['models', 'list', tableParams, searchQuery],
-		queryFn: fetchModels,
-		gcTime: 1000,
-		placeholderData: keepPreviousData
+	const { data, error, isPending, isError, isFetching } = useQuery({
+		...apiClient.getAllModelsInfiniteQueryOptions(
+			{ tableParams },
+			{ searchQuery }
+		)
 	})
-
-	console.log(data)
 
 	const handleChangePage = (event, newPage) => {
 		updateTableParams({ page: newPage })
@@ -72,7 +65,6 @@ const CustomTableContainer = ({ searchQuery }) => {
 			rowsPerPage: parseInt(event.target.value, 10),
 			page: 0
 		})
-		console.log('handleChangeRowsPerPage')
 	}
 
 	const handleSort = column => {
@@ -84,16 +76,19 @@ const CustomTableContainer = ({ searchQuery }) => {
 		})
 	}
 
-	const handleEdit = id => {
-		console.log('Edit row with id:', id)
+	const handleEdit = row => {
+		console.log('Edit row with id:', row.id)
+		setEditData(row)
 	}
 
-	const handleDelete = id => {
-		console.log('Delete row with id:', id)
+	// Delete handler
+	const handleDelete = async id => {
+		console.log(id)
+		deleteModel(id).then(res => alert(res))
 	}
 
 	if (isPending) return <span>Loading...</span>
-	if (isError) return <span>Error loading data</span>
+	if (isError) return <span>Error loading data, {error.message}</span>
 
 	return (
 		<TableContainer component={Paper}>

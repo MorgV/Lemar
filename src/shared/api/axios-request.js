@@ -1,6 +1,11 @@
 // Импортируем axios
 import axios from 'axios'
 import { REACT_APP_API_URL } from '../../utils/constans'
+import {
+	infiniteQueryOptions,
+	keepPreviousData,
+	useQuery
+} from '@tanstack/react-query'
 
 // Создаем экземпляр axios с базовыми настройками
 const apiClient = axios.create({
@@ -11,23 +16,31 @@ const apiClient = axios.create({
 	}
 })
 
-// Функция для GET-запроса
-export const getAll = async (endpoint, params = {}, { signal }) => {
-	try {
-		const models = await apiClient.get(
-			endpoint,
-			{
-				params
+export const modelsClient = {
+	getAllModelsInfiniteQueryOptions: ({ tableParams }, { searchQuery }) => {
+		return infiniteQueryOptions({
+			queryKey: ['models', 'list', tableParams, searchQuery],
+			queryFn: ({ queryKey }) => {
+				// Извлекаем параметры из queryKey
+				const [, , tableParams, searchQuery] = queryKey
+				return getAllModels({ tableParams, searchQuery })
 			},
-			signal
-		)
+			placeholderData: keepPreviousData
+		})
+	}
+}
+// Функция для GET-запроса
+export const getAll = async (endpoint, params = {}) => {
+	try {
+		const models = await apiClient.get(endpoint, {
+			params
+		})
 		return models.data
 	} catch (error) {
 		console.error('Ошибка при выполнении GET-запроса:', error)
 		throw error
 	}
 }
-
 // Функция для POST-запроса
 export const postData = async (endpoint, data) => {
 	try {
@@ -38,27 +51,42 @@ export const postData = async (endpoint, data) => {
 		throw error
 	}
 }
+export const deleteModel = async id => {
+	try {
+		// Отправляем DELETE-запрос по указанному ID
+		const response = await apiClient.delete(`/models/${id}`)
+		console.log(response)
+		return 0 // Возвращаем данные ответа сервера (например, сообщение об успешном удалении)
+	} catch (error) {
+		console.error('Ошибка при выполнении DELETE-запроса:', error)
+		throw error
+	}
+}
+export const getAllModels = async ({ tableParams, searchQuery }) => {
+	console.log(tableParams)
 
-// export const fetchModels = async ({
-// 	signal,
-// 	page,
-// 	rowsPerPage,
-// 	searchQuery,
-// 	sortBy,
-// 	sortDirection
-// }) => {
-// 	const response = await getAll(
-// 		'/models',
-// 		{
-// 			params: {
-// 				page: page + 1, // API pages are 1-based
-// 				perPage: rowsPerPage,
-// 				search: searchQuery,
-// 				sortBy,
-// 				sortDirection
-// 			}
-// 		},
-// 		signal
-// 	)
-// 	return response
-// }
+	const response = await getAll('/models', {
+		params: {
+			page: tableParams.page + 1, // API pages are 1-based
+			perPage: tableParams.rowsPerPage,
+			search: searchQuery,
+			sortBy: tableParams.sortBy,
+			sortDirection: tableParams.sortDirection
+		}
+	})
+	return response
+}
+const fetchModelById = async id => {
+	const { data } = await axios.get(`http://localhost:5000/models/${id}`)
+	return data
+}
+
+export const useModel = id => {
+	return useQuery({
+		queryKey: [`model`, id],
+		queryFn: () => fetchModelById(id),
+		enabled: !!id // Выполнять запрос только, если id существует
+	})
+}
+
+export default modelsClient

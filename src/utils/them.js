@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles'
+import colors from 'vuetify/lib/util/colors'
 const theme = createTheme({
 	palette: {
 		text: {
@@ -40,6 +41,27 @@ const theme = createTheme({
 					},
 					'& .MuiInputBase-input': {
 						color: 'white' // Цвет текста #01959f
+					}
+				}
+			}
+		},
+		MuiFormControl: {
+			styleOverrides: {
+				root: {
+					// Если нужно добавить стили для FormControl
+					'& .MuiOutlinedInput-root': {
+						'& fieldset': {
+							borderColor: 'white' // Цвет обводки
+						},
+						'&:hover fieldset': {
+							borderColor: 'white' // Цвет обводки при наведении
+						},
+						'&.Mui-focused fieldset': {
+							borderColor: '#b53471' // Цвет обводки при фокусе
+						}
+					},
+					'& .MuiInputBase-input': {
+						color: 'white' // Цвет текста
 					}
 				}
 			}

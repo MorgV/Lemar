@@ -1,40 +1,59 @@
-import React, { useState } from 'react'
-import { Modal, Box, Button, Typography, IconButton } from '@mui/material'
+import { useState } from 'react'
+import {
+	Modal,
+	Box,
+	Button,
+	Typography,
+	IconButton,
+	Alert
+} from '@mui/material'
 import { Close } from '@mui/icons-material'
 
 const ImageModal = ({ open, onClose, onSave }) => {
 	const [selectedImages, setSelectedImages] = useState([])
-	const [selectedImageIndex, setSelectedImageIndex] = useState(null) // Selected profile image
+	const [selectedImageIndex, setSelectedImageIndex] = useState(null)
+	const [error, setError] = useState('') // Для хранения текста ошибки
 
 	const handleFileChange = event => {
 		const files = Array.from(event.target.files)
 		setSelectedImages([...selectedImages, ...files])
+		setError('') // Убираем ошибку, если пользователь добавил файлы
 	}
 
 	const handleClear = () => {
 		setSelectedImages([])
+		setError('') // Убираем ошибку при очистке
 	}
 
 	const handleRemoveImage = index => {
 		const newImages = selectedImages.filter((_, i) => i !== index)
 		setSelectedImages(newImages)
+		if (index === selectedImageIndex) {
+			setSelectedImageIndex(null) // Сбрасываем выбор, если удалено выбранное изображение
+		}
 	}
 
 	const handleImageClick = index => {
 		setSelectedImageIndex(index === selectedImageIndex ? null : index)
 	}
 
-	// Handle Save
 	const handleSave = () => {
-		// Set the imageProfile as the selected image
-		const imageProfile =
-			selectedImageIndex !== null ? selectedImages[selectedImageIndex] : null
-		// Pass both selected images and profile image to parent component
+		if (selectedImages.length === 0) {
+			setError('Добавьте хотя бы одно изображение.')
+			return
+		}
+		if (selectedImageIndex === null) {
+			setError('Выберите профильное изображение.')
+			return
+		}
+
+		const imageProfile = selectedImages[selectedImageIndex]
 		onSave({
 			images: selectedImages,
 			imageProfile
 		})
 		onClose()
+		setError('') // Сбрасываем ошибку после успешного сохранения
 	}
 
 	return (
@@ -98,6 +117,13 @@ const ImageModal = ({ open, onClose, onSave }) => {
 				<Typography variant='h6' mb={2}>
 					Выберите изображения
 				</Typography>
+
+				{/* Error message */}
+				{error && (
+					<Alert severity='error' sx={{ mb: 2 }}>
+						{error}
+					</Alert>
+				)}
 
 				{/* Display images */}
 				<Box
