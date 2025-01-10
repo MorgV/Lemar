@@ -51,7 +51,7 @@ const Header = () => {
 					<nav className={burgerState ? 'header__menu active' : 'header__menu'}>
 						<ul className='header__list'>
 							<li>
-								<a href='/Lemar/models' className='header__link'>
+								<a href='/models' className='header__link'>
 									База моделей
 								</a>
 							</li>

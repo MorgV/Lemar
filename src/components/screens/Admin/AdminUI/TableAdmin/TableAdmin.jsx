@@ -13,7 +13,7 @@ export default function SimpleTable() {
 	return (
 		<Box sx={{ width: '100%', display: 'flex', gap: '20px' }}>
 			{/* Form с инпутами для таблицы */}
-			<FormInput editData={editData} />
+			<FormInput editData={editData} setEditData={setEditData} />
 			{/* Таблица */}
 			<Box sx={{ flex: 3 }}>
 				<SearchInput

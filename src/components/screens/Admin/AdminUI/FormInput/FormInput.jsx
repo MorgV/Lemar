@@ -9,11 +9,13 @@ import {
 	InputLabel
 } from '@mui/material'
 import ImageModal from './ImageModal/ImageModal'
-import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
+import { useState, useEffect } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { REACT_APP_API_URL } from '../../../../../utils/constans'
+import modelsClient, { useModel } from '../../../../../shared/api/axios-request'
 
-const FormInput = ({ editData, onFormSubmit }) => {
+const FormInput = ({ editData, setEditData }) => {
+	const queryClient = useQueryClient()
 	const [errors, setErrors] = useState({
 		firstName: '',
 		height: '',
@@ -32,69 +34,80 @@ const FormInput = ({ editData, onFormSubmit }) => {
 	})
 	const [imageList, setImageList] = useState([])
 	const [isModalOpen, setModalOpen] = useState(false)
+	const [selectedImages, setSelectedImages] = useState([])
+	const [selectedImageIndex, setSelectedImageIndex] = useState(null)
 
-	// Handle input change for form fields
+	// Получение данных для редактирования
+	const idModelInTable = editData ? editData.id : null
+
+	const { data } = useModel(idModelInTable)
+
+	// Обработчик изменения полей
 	const handleInputChange = e => {
 		const { name, value } = e.target
-		setInputs({
-			...inputs,
+		setInputs(prev => ({
+			...prev,
 			[name]: value
-		})
+		}))
+
 		if (value === '') {
-			setErrors({ ...errors, [name]: `${name} обязательно` })
+			setErrors(prev => ({ ...prev, [name]: `${name} обязательно` }))
 		} else {
-			setErrors({ ...errors, [name]: '' })
+			setErrors(prev => ({ ...prev, [name]: '' }))
 		}
 	}
 
-	// Mutation for form submission
-	const mutation = useMutation({
-		mutationFn: async formData => {
-			const response = await axios.post(
-				'http://localhost:5000/models',
-				formData,
-				{
-					headers: {
-						'Content-Type': 'multipart/form-data'
-					}
-				}
-			)
-			return response.data
-		},
-		mutationKey: ['create', 'model'],
-		onSuccess: data => {
-			// Reset form data including images after successful form submission
-			setTimeout(() => {
-				// Reset the form inputs and images
-				setInputs({
-					firstName: '',
-					height: '',
-					shoeSize: '',
-					gender: '',
-					age: '',
-					imageProfile: ''
-				})
-				setErrors({
-					firstName: '',
-					height: '',
-					shoeSize: '',
-					gender: '',
-					age: '',
-					imageProfile: ''
-				})
-				setImageList([]) // Clear the image list
-				setModalOpen(false) // Close the modal
-				alert('Данные успешно сохранены!')
-			}, 1000)
+	const clearImages = () => {
+		setImageList([])
+	}
+	const clearInputs = () =>
+		setInputs({
+			firstName: '',
+			height: '',
+			shoeSize: '',
+			gender: '',
+			age: '',
+			imageProfile: ''
+		})
+	// Мутация для сохранения
+	const createModelMutation = useMutation({
+		mutationFn: modelsClient.createModel,
+		mutationKey: ['save', 'model'],
+		onSuccess: () => {
+			// alert('Данные успешно сохранены!')
+			clearInputs()
+			clearImages()
 		},
 		onError: error => {
-			alert('Ошибка:', error)
+			alert(error.message)
+		},
+		async onSettled() {
+			await queryClient.invalidateQueries({
+				queryKey: ['models', 'list']
+			})
 		}
 	})
 
-	// Handle form submission
+	useEffect(() => {
+		if (editData) {
+			setInputs({
+				firstName: editData.FI || '',
+				height: editData.height || '',
+				shoeSize: editData.shoeSize || '',
+				gender: editData.gender || '',
+				age: editData.age || '',
+				imageProfile: `${REACT_APP_API_URL}${editData.imageProfile}` || ''
+			})
+			console.log(data)
+			// setImageList(data?.map(el => console.log(el)) || [])
+		}
+	}, [editData, data])
+
+	// Отправка формы
 	const handleSubmit = e => {
 		e.preventDefault()
+
+		// Проверка ошибок
 		const newErrors = {}
 		if (!inputs.firstName) newErrors.firstName = 'Фамилия Имя обязательно'
 		if (!inputs.height) newErrors.height = 'Рост обязателен'
@@ -118,66 +131,54 @@ const FormInput = ({ editData, onFormSubmit }) => {
 		formData.append('gender', inputs.gender)
 		formData.append('age', inputs.age)
 
-		// Add profile image to formData
 		if (inputs.imageProfile instanceof File) {
 			formData.append('imageProfile', inputs.imageProfile)
+			console.log('imageProfile передан')
 		}
 
-		// Add all images in the imageList to formData
-		let imgCount = 0
 		imageList.forEach((image, index) => {
-			imgCount++
 			formData.append(`images[${index}]`, image)
 		})
-		formData.append('imgCount', imgCount)
-
-		mutation.mutate(formData)
+		formData.append('imgCount', imageList.length)
+		console.log('Submit fn')
+		createModelMutation.mutate(formData) // ,?
 	}
 
 	return (
 		<Box sx={{ flex: 1 }}>
 			<form
-				style={{
-					height: '100%',
-					display: 'flex',
-					flexDirection: 'column'
-				}}
 				onSubmit={handleSubmit}
+				style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
 			>
 				<TextField
 					name='firstName'
 					label='Фамилия Имя'
-					variant='outlined'
 					value={inputs.firstName}
 					onChange={handleInputChange}
 					error={!!errors.firstName}
 					helperText={errors.firstName}
-					sx={{ width: '100%', mb: 2 }}
+					sx={{ mb: 2 }}
 				/>
 				<TextField
 					name='height'
 					label='Рост'
 					type='number'
-					variant='outlined'
 					value={inputs.height}
 					onChange={handleInputChange}
 					error={!!errors.height}
 					helperText={errors.height}
-					sx={{ width: '100%', mb: 2 }}
+					sx={{ mb: 2 }}
 				/>
 				<TextField
 					name='shoeSize'
 					label='Размер обуви'
 					type='number'
-					variant='outlined'
 					value={inputs.shoeSize}
 					onChange={handleInputChange}
 					error={!!errors.shoeSize}
 					helperText={errors.shoeSize}
-					sx={{ width: '100%', mb: 2 }}
+					sx={{ mb: 2 }}
 				/>
-
-				{/* Gender selection (dropdown) */}
 				<FormControl
 					fullWidth
 					variant='outlined'
@@ -191,9 +192,6 @@ const FormInput = ({ editData, onFormSubmit }) => {
 						onChange={handleInputChange}
 						label='Пол'
 					>
-						<MenuItem value=''>
-							<em>Выберите пол</em>
-						</MenuItem>
 						<MenuItem value='Мужской'>Мужской</MenuItem>
 						<MenuItem value='Женский'>Женский</MenuItem>
 					</Select>
@@ -201,20 +199,16 @@ const FormInput = ({ editData, onFormSubmit }) => {
 						<Typography color='error'>{errors.gender}</Typography>
 					)}
 				</FormControl>
-
 				<TextField
 					name='age'
 					label='Возраст'
 					type='number'
-					variant='outlined'
 					value={inputs.age}
 					onChange={handleInputChange}
 					error={!!errors.age}
 					helperText={errors.age}
-					sx={{ width: '100%', mb: 2 }}
+					sx={{ mb: 2 }}
 				/>
-
-				{/* Image Profile Button */}
 				<Button
 					variant='outlined'
 					onClick={() => setModalOpen(true)}
@@ -228,8 +222,6 @@ const FormInput = ({ editData, onFormSubmit }) => {
 						? 'Выбрать изображения'
 						: `${errors.imageProfile}, ${errors.imageList}`}
 				</Button>
-
-				{/* Display selected profile image below button */}
 				{inputs.imageProfile && (
 					<Box
 						sx={{
@@ -243,7 +235,11 @@ const FormInput = ({ editData, onFormSubmit }) => {
 							Выбранное изображение профиля:
 						</Typography>
 						<img
-							src={URL.createObjectURL(inputs.imageProfile)}
+							src={
+								editData
+									? inputs.imageProfile
+									: URL.createObjectURL(inputs.imageProfile)
+							}
 							alt='Profile'
 							style={{
 								width: '120px',
@@ -255,13 +251,48 @@ const FormInput = ({ editData, onFormSubmit }) => {
 						/>
 					</Box>
 				)}
-
-				<Button type='submit' variant='contained' disabled={mutation.isLoading}>
-					{mutation.isLoading ? 'Сохранение...' : 'Сохранить'}
+				<Button
+					type='submit'
+					variant='contained'
+					color={editData ? 'secondary' : 'primary'}
+					disabled={createModelMutation.isLoading}
+					onClick={editData ? handleSubmit : null}
+				>
+					{createModelMutation.isPending
+						? 'Сохранение...'
+						: editData
+						? 'Изменить'
+						: 'Сохранить'}
 				</Button>
+				{editData ? (
+					<Button
+						variant='outlined'
+						onClick={() => {
+							clearImages()
+							clearInputs()
+							setEditData('')
+						}}
+						color='error'
+						sx={{
+							marginTop: '10px',
+							width: '100%',
+							borderColor: '#b53471',
+							color: '#b53471',
+							'&:hover': {
+								borderColor: '#b53471',
+								color: '#b53471'
+							}
+						}}
+					>
+						Отмена
+					</Button>
+				) : (
+					<span></span>
+				)}
 			</form>
 			<ImageModal
 				open={isModalOpen}
+				key={inputs.id}
 				onClose={() => setModalOpen(false)}
 				onSave={({ images, imageProfile }) => {
 					setImageList(images)
@@ -270,6 +301,11 @@ const FormInput = ({ editData, onFormSubmit }) => {
 						imageProfile: imageProfile
 					})
 				}}
+				onClear={clearImages} // Новый пропс для очистки
+				selectedImages={selectedImages}
+				selectedImageIndex={selectedImageIndex}
+				setSelectedImages={setSelectedImages}
+				setSelectedImageIndex={setSelectedImageIndex}
 			/>
 		</Box>
 	)

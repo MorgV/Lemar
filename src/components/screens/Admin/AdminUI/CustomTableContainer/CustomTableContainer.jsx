@@ -11,12 +11,15 @@ import {
 	TablePagination
 } from '@mui/material'
 import { ArrowDownward, ArrowUpward, Delete, Edit } from '@mui/icons-material'
-import { keepPreviousData, useQuery, useMutation } from '@tanstack/react-query'
-import { getAll, deleteModel } from '../../../../../shared/api/axios-request'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import modelsClient, {
+	deleteModel
+} from '../../../../../shared/api/axios-request'
 import TableRowMemo from './TableRow/TableRow'
 import apiClient from '../../../../../shared/api/axios-request'
 
 const CustomTableContainer = ({ searchQuery, setEditData }) => {
+	const queryClient = useQueryClient()
 	const [tableParams, setTableParams] = useState({
 		page: 0,
 		rowsPerPage: 5,
@@ -29,26 +32,6 @@ const CustomTableContainer = ({ searchQuery, setEditData }) => {
 		setTableParams(prev => ({ ...prev, ...updates }))
 	}
 
-	// const fetchModels = useCallback(
-	// 	async ({ signal }) => {
-	// 		const response = await getAll(
-	// 			'/models',
-	// 			{
-	// 				params: {
-	// 					page: tableParams.page + 1, // API pages are 1-based
-	// 					perPage: tableParams.rowsPerPage,
-	// 					search: searchQuery,
-	// 					sortBy: tableParams.sortBy,
-	// 					sortDirection: tableParams.sortDirection
-	// 				}
-	// 			},
-	// 			signal
-	// 		)
-	// 		return response
-	// 	},
-	// 	[tableParams, searchQuery]
-	// )
-
 	const { data, error, isPending, isError, isFetching } = useQuery({
 		...apiClient.getAllModelsInfiniteQueryOptions(
 			{ tableParams },
@@ -56,6 +39,34 @@ const CustomTableContainer = ({ searchQuery, setEditData }) => {
 		)
 	})
 
+	// Мутация для удаления
+	const deleteModelMutation = useMutation({
+		mutationFn: modelsClient.deleteModel,
+		mutationKey: ['delete', 'model'],
+		async onSuccess(_, deletedId) {
+			const models = queryClient.getQueryData(
+				modelsClient.getAllModelsInfiniteQueryOptions.queryKey
+			)
+			if (models) {
+				const updatedModels = models.filter(item => item.id !== deletedId)
+				queryClient.setQueryData(
+					modelsClient.getAllModelsInfiniteQueryOptions.queryKey,
+					updatedModels
+				)
+			}
+		},
+		onError: error => {
+			alert('Ошибка сохранения:', error.message)
+		},
+		async onSettled() {
+			queryClient.invalidateQueries({
+				queryKey: ['models', 'list']
+			})
+		}
+	})
+	const handleDelete = id => {
+		deleteModelMutation.mutate(id)
+	}
 	const handleChangePage = (event, newPage) => {
 		updateTableParams({ page: newPage })
 	}
@@ -82,10 +93,9 @@ const CustomTableContainer = ({ searchQuery, setEditData }) => {
 	}
 
 	// Delete handler
-	const handleDelete = async id => {
-		console.log(id)
-		deleteModel(id).then(res => alert(res))
-	}
+	// const handleDelete = async id => {
+	// 	deleteModel(id).then(res => alert(res))
+	// }
 
 	if (isPending) return <span>Loading...</span>
 	if (isError) return <span>Error loading data, {error.message}</span>
@@ -106,6 +116,12 @@ const CustomTableContainer = ({ searchQuery, setEditData }) => {
 										<ArrowDownward fontSize='small' />
 									)}
 								</IconButton>
+							</span>
+						</TableCell>
+						<TableCell>
+							<span style={{ display: 'flex', alignItems: 'center' }}>
+								Icon
+								<IconButton onClick={() => handleSort('FI')}></IconButton>
 							</span>
 						</TableCell>
 						<TableCell>

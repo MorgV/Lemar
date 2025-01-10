@@ -17,16 +17,49 @@ const apiClient = axios.create({
 })
 
 export const modelsClient = {
-	getAllModelsInfiniteQueryOptions: ({ tableParams }, { searchQuery }) => {
+	getAllModelsInfiniteQueryOptions: (
+		{ tableParams = {} },
+		{ searchQuery = '' } = {}
+	) => {
 		return infiniteQueryOptions({
 			queryKey: ['models', 'list', tableParams, searchQuery],
 			queryFn: ({ queryKey }) => {
 				// Извлекаем параметры из queryKey
 				const [, , tableParams, searchQuery] = queryKey
-				return getAllModels({ tableParams, searchQuery })
+
+				// Проверяем наличие tableParams
+				return getAllModels(tableParams ? { tableParams, searchQuery } : {})
 			},
 			placeholderData: keepPreviousData
 		})
+	},
+
+	createModel: data => {
+		return postData('/models', data)
+	},
+	updateModel: (data, { id }) => {
+		return apiClient(`/models/${id}`, {
+			method: 'POST',
+			json: data
+		})
+	},
+	deleteModel: async id => {
+		try {
+			console.log('Удаляем модель с ID:', id)
+			const response = await apiClient(`/models/${id}`, {
+				method: 'DELETE'
+			})
+			// Проверяем статус ответа, если сервер возвращает его в теле
+			if (response.status !== 200) {
+				throw new Error(response.message || 'Ошибка при удалении модели')
+			}
+			console.log('Удаляем модель с IddddddddddddddD:', response)
+
+			return response.data // Успешный результат
+		} catch (error) {
+			console.error('Ошибка при удалении модели:', 'e12e123')
+			throw error // Пробрасываем ошибку, чтобы она обрабатывалась далее (например, в onError)
+		}
 	}
 }
 // Функция для GET-запроса
@@ -44,7 +77,11 @@ export const getAll = async (endpoint, params = {}) => {
 // Функция для POST-запроса
 export const postData = async (endpoint, data) => {
 	try {
-		const response = await apiClient.post(endpoint, data)
+		const response = await apiClient.post(endpoint, data, {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		})
 		return response.data
 	} catch (error) {
 		console.error('Ошибка при выполнении POST-запроса:', error)
@@ -76,17 +113,47 @@ export const getAllModels = async ({ tableParams, searchQuery }) => {
 	})
 	return response
 }
-const fetchModelById = async id => {
-	const { data } = await axios.get(`http://localhost:5000/models/${id}`)
-	return data
-}
-
 export const useModel = id => {
 	return useQuery({
 		queryKey: [`model`, id],
 		queryFn: () => fetchModelById(id),
 		enabled: !!id // Выполнять запрос только, если id существует
 	})
+}
+const fetchModelById = async id => {
+	const { data } = await axios
+		.get(`http://localhost:5000/models/${id}`)
+		.then(data => {
+			console.log('Данные получены:', data) // Это массив байтов
+		})
+		.catch(error => {
+			console.error('Ошибка:', error)
+		})
+	return data.data
+}
+
+export const saveModel = async ({ formData, id }) => {
+	const endpoint = id ? `/models/${id}` : `/models`
+	console.log(endpoint, formData)
+	if (id) {
+		const response = await apiClient.put({
+			url: endpoint,
+			formData,
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		})
+		return response.data
+	} else {
+		const response = await apiClient.post({
+			url: endpoint,
+			data: formData,
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		})
+		return response.data
+	}
 }
 
 export default modelsClient

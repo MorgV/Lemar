@@ -9,11 +9,16 @@ import {
 } from '@mui/material'
 import { Close } from '@mui/icons-material'
 
-const ImageModal = ({ open, onClose, onSave }) => {
-	const [selectedImages, setSelectedImages] = useState([])
-	const [selectedImageIndex, setSelectedImageIndex] = useState(null)
+const ImageModal = ({
+	open,
+	onClose,
+	selectedImages,
+	setSelectedImages,
+	selectedImageIndex,
+	setSelectedImageIndex,
+	onSave
+}) => {
 	const [error, setError] = useState('') // Для хранения текста ошибки
-
 	const handleFileChange = event => {
 		const files = Array.from(event.target.files)
 		setSelectedImages([...selectedImages, ...files])
@@ -54,6 +59,9 @@ const ImageModal = ({ open, onClose, onSave }) => {
 		})
 		onClose()
 		setError('') // Сбрасываем ошибку после успешного сохранения
+	}
+	const isFile = el => {
+		return el instanceof File ? true : false
 	}
 
 	return (
@@ -112,11 +120,37 @@ const ImageModal = ({ open, onClose, onSave }) => {
 						Очистить
 					</Button>
 				</Box>
-
-				{/* Header */}
-				<Typography variant='h6' mb={2}>
-					Выберите изображения
-				</Typography>
+				<Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+					<Button
+						variant='outlined'
+						onClick={onClose}
+						color='error'
+						sx={{
+							width: '48%',
+							borderColor: '#b53471',
+							color: '#b53471',
+							'&:hover': {
+								borderColor: '#b53471',
+								color: '#b53471'
+							}
+						}}
+					>
+						Отмена
+					</Button>
+					<Button
+						variant='contained'
+						onClick={handleSave}
+						sx={{
+							width: '48%',
+							backgroundColor: '#01959f',
+							'&:hover': {
+								backgroundColor: '#01b2bf'
+							}
+						}}
+					>
+						Сохранить
+					</Button>
+				</Box>
 
 				{/* Error message */}
 				{error && (
@@ -150,7 +184,7 @@ const ImageModal = ({ open, onClose, onSave }) => {
 							onClick={() => handleImageClick(index)}
 						>
 							<img
-								src={URL.createObjectURL(file)}
+								src={isFile(file) ? URL.createObjectURL(file) : file}
 								alt={file.name}
 								style={{
 									width: '100%',
@@ -195,37 +229,9 @@ const ImageModal = ({ open, onClose, onSave }) => {
 				</Box>
 
 				{/* Bottom row buttons */}
-				<Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-					<Button
-						variant='outlined'
-						onClick={onClose}
-						color='error'
-						sx={{
-							width: '48%',
-							borderColor: '#b53471',
-							color: '#b53471',
-							'&:hover': {
-								borderColor: '#b53471',
-								color: '#b53471'
-							}
-						}}
-					>
-						Отмена
-					</Button>
-					<Button
-						variant='contained'
-						onClick={handleSave}
-						sx={{
-							width: '48%',
-							backgroundColor: '#01959f',
-							'&:hover': {
-								backgroundColor: '#01b2bf'
-							}
-						}}
-					>
-						Сохранить
-					</Button>
-				</Box>
+				<Box
+					sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}
+				></Box>
 			</Box>
 		</Modal>
 	)

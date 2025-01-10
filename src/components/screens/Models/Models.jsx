@@ -1,13 +1,12 @@
 import Layout from '../../layout/Layout'
 import styles from './Models.module.scss'
-import Card from './ModelsUI/Card/Card'
-// import cardsData from '../../../data/data.json'
-import axios from 'axios'
-import { useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
 
+import { useQuery } from '@tanstack/react-query'
+import { modelsClient } from '../../../shared/api/axios-request'
+import Card from './ModelsUI/Card/Card'
+import { useState } from 'react'
 function Models() {
-	let models = []
+	// let models = []
 	// const getModels = async (page = 1, perPage = 1, searchStroke = '') => {
 	// 	try {
 	// 		const response = await axios.get('http://localhost:5000/Lemar/models', {
@@ -22,17 +21,20 @@ function Models() {
 	// 		return []
 	// 	}
 	// }
-
-	useEffect(() => {
-		getModels().then(modelsArray => (models = modelsArray)) // здесь лежат модели но не отрисовываются так как стейт менеджера нет
-		console.log('first')
-	}, [])
-
-	const { data, error, isPending } = useQuery({
-		queryKey: ['models', 'list'],
-		queryFn: getModels
+	const [tableParams, setTableParams] = useState({
+		page: 0,
+		rowsPerPage: 20,
+		sortBy: 'id',
+		sortDirection: 'asc'
+	})
+	const { data, error, isPending, isError, isFetching } = useQuery({
+		...modelsClient.getAllModelsInfiniteQueryOptions(
+			{ tableParams },
+			{ searchQuery: '' }
+		)
 	})
 
+	console.log(data)
 	if (isPending) {
 		return <div>Loading...</div>
 	}
@@ -45,7 +47,7 @@ function Models() {
 			<main className={styles.main}>
 				<div className='container'>
 					<div className={styles.main__cards}>
-						{data.map((item, index) => {
+						{data.models.map((item, index) => {
 							return <Card data={item} key={index} />
 						})}
 					</div>
