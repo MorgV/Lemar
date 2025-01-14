@@ -5,22 +5,22 @@ import Admin from '../../components/screens/Admin/Admin.jsx'
 
 export const routes = [
 	{
-		path: '/',
+		path: '/Lemar',
 		component: Home,
 		isAuth: false
 	},
 	{
-		path: '/models',
+		path: '/Lemar/models',
 		component: Models,
 		isAuth: false
 	},
 	{
-		path: '/auth',
+		path: '/Lemar/auth',
 		component: Auth,
 		isAuth: false
 	},
 	{
-		path: '/admin',
+		path: '/Lemar/admin',
 		component: Admin,
 		isAuth: false
 	}
