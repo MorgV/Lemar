@@ -35,13 +35,12 @@ export const modelsClient = {
 	},
 
 	createModel: data => {
+		console.log('create MOdel')
 		return postData('/models', data)
 	},
-	updateModel: (data, { id }) => {
-		return apiClient(`/models/${id}`, {
-			method: 'POST',
-			json: data
-		})
+	updateModel: ({ data, id }) => {
+		console.log('Updating model:', data, id)
+		return postData(`/models/${id}`, data) // Используем postData
 	},
 	deleteModel: async id => {
 		try {
@@ -53,7 +52,7 @@ export const modelsClient = {
 			if (response.status !== 200) {
 				throw new Error(response.message || 'Ошибка при удалении модели')
 			}
-			console.log('Удаляем модель с IddddddddddddddD:', response)
+			console.log('Удаляем модель с ID:', response)
 
 			return response.data // Успешный результат
 		} catch (error) {
@@ -116,20 +115,19 @@ export const getAllModels = async ({ tableParams, searchQuery }) => {
 export const useModel = id => {
 	return useQuery({
 		queryKey: [`model`, id],
-		queryFn: () => fetchModelById(id),
-		enabled: !!id // Выполнять запрос только, если id существует
+		queryFn: () => getModelById(id),
+		enabled: !!id
 	})
 }
-const fetchModelById = async id => {
-	const { data } = await axios
-		.get(`http://localhost:5000/models/${id}`)
-		.then(data => {
-			console.log('Данные получены:', data) // Это массив байтов
-		})
-		.catch(error => {
-			console.error('Ошибка:', error)
-		})
-	return data.data
+const getModelById = async id => {
+	try {
+		const { data } = await axios.get(`http://localhost:5000/models/${id}`)
+		console.log('Данные получены:', data)
+		return data // Возвращаем данные здесь
+	} catch (error) {
+		console.error('Ошибка:', error)
+		return null // Возвращаем null в случае ошибки
+	}
 }
 
 export const saveModel = async ({ formData, id }) => {

@@ -9,13 +9,12 @@ import {
 	InputLabel
 } from '@mui/material'
 import ImageModal from './ImageModal/ImageModal'
-import { useState, useEffect } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useState, useEffect, useMemo } from 'react'
+import useModelForm from '../../../../../shared/hooks/useCreateModel' // Импорт нового хука
 import { REACT_APP_API_URL } from '../../../../../utils/constans'
-import modelsClient, { useModel } from '../../../../../shared/api/axios-request'
+import { useModel } from '../../../../../shared/api/axios-request'
 
 const FormInput = ({ editData, setEditData }) => {
-	const queryClient = useQueryClient()
 	const [errors, setErrors] = useState({
 		firstName: '',
 		height: '',
@@ -33,16 +32,58 @@ const FormInput = ({ editData, setEditData }) => {
 		imageProfile: ''
 	})
 	const [imageList, setImageList] = useState([])
+	const [imageDeleteList, setImageDeleteList] = useState([])
 	const [isModalOpen, setModalOpen] = useState(false)
 	const [selectedImages, setSelectedImages] = useState([])
 	const [selectedImageIndex, setSelectedImageIndex] = useState(null)
 
-	// Получение данных для редактирования
-	const idModelInTable = editData ? editData.id : null
-
+	const idModelInTable = useMemo(() => editData?.id, [editData])
 	const { data } = useModel(idModelInTable)
+	console.log('rerender', data)
+	const clearInputs = () =>
+		setInputs({
+			firstName: '',
+			height: '',
+			shoeSize: '',
+			gender: '',
+			age: '',
+			imageProfile: ''
+		})
+	const clearImages = () => {
+		setImageList([])
+		setSelectedImages([])
+		setSelectedImageIndex([])
+	}
+	const isFile = el => {
+		return el instanceof File ? true : false
+	}
 
-	// Обработчик изменения полей
+	const { handleSubmit, createModelMutation } = useModelForm({
+		editData,
+		setEditData,
+		clearInputs,
+		clearImages,
+		setErrors
+	})
+
+	useEffect(() => {
+		console.log(editData)
+		if (editData && Object.keys(editData).length !== 0) {
+			setInputs({
+				firstName: editData.FI || '',
+				height: editData.height || '',
+				shoeSize: editData.shoeSize || '',
+				gender: editData.gender || '',
+				age: editData.age || '',
+				imageProfile: `${REACT_APP_API_URL}${editData.imageProfile}` || ''
+			})
+		} else if (editData ? Object.keys(editData).length === 0 : false) {
+			clearImages()
+			clearInputs()
+			setEditData(undefined)
+		}
+	}, [editData, data]) // Этот useEffect срабатывает только при изменении editData
+
 	const handleInputChange = e => {
 		const { name, value } = e.target
 		setInputs(prev => ({
@@ -57,97 +98,10 @@ const FormInput = ({ editData, setEditData }) => {
 		}
 	}
 
-	const clearImages = () => {
-		setImageList([])
-	}
-	const clearInputs = () =>
-		setInputs({
-			firstName: '',
-			height: '',
-			shoeSize: '',
-			gender: '',
-			age: '',
-			imageProfile: ''
-		})
-	// Мутация для сохранения
-	const createModelMutation = useMutation({
-		mutationFn: modelsClient.createModel,
-		mutationKey: ['save', 'model'],
-		onSuccess: () => {
-			// alert('Данные успешно сохранены!')
-			clearInputs()
-			clearImages()
-		},
-		onError: error => {
-			alert(error.message)
-		},
-		async onSettled() {
-			await queryClient.invalidateQueries({
-				queryKey: ['models', 'list']
-			})
-		}
-	})
-
-	useEffect(() => {
-		if (editData) {
-			setInputs({
-				firstName: editData.FI || '',
-				height: editData.height || '',
-				shoeSize: editData.shoeSize || '',
-				gender: editData.gender || '',
-				age: editData.age || '',
-				imageProfile: `${REACT_APP_API_URL}${editData.imageProfile}` || ''
-			})
-			console.log(data)
-			// setImageList(data?.map(el => console.log(el)) || [])
-		}
-	}, [editData, data])
-
-	// Отправка формы
-	const handleSubmit = e => {
-		e.preventDefault()
-
-		// Проверка ошибок
-		const newErrors = {}
-		if (!inputs.firstName) newErrors.firstName = 'Фамилия Имя обязательно'
-		if (!inputs.height) newErrors.height = 'Рост обязателен'
-		if (!inputs.shoeSize) newErrors.shoeSize = 'Размер обуви обязателен'
-		if (!inputs.gender) newErrors.gender = 'Пол обязателен'
-		if (!inputs.age) newErrors.age = 'Возраст обязателен'
-		if (!inputs.imageProfile)
-			newErrors.imageProfile = 'Фото для профиля обязательно'
-		if (imageList.length === 0) newErrors.imageList = 'Введите картинку'
-
-		setErrors(newErrors)
-
-		if (Object.keys(newErrors).length > 0) {
-			return
-		}
-
-		const formData = new FormData()
-		formData.append('firstName', inputs.firstName)
-		formData.append('height', inputs.height)
-		formData.append('shoeSize', inputs.shoeSize)
-		formData.append('gender', inputs.gender)
-		formData.append('age', inputs.age)
-
-		if (inputs.imageProfile instanceof File) {
-			formData.append('imageProfile', inputs.imageProfile)
-			console.log('imageProfile передан')
-		}
-
-		imageList.forEach((image, index) => {
-			formData.append(`images[${index}]`, image)
-		})
-		formData.append('imgCount', imageList.length)
-		console.log('Submit fn')
-		createModelMutation.mutate(formData) // ,?
-	}
-
 	return (
 		<Box sx={{ flex: 1 }}>
 			<form
-				onSubmit={handleSubmit}
+				onSubmit={e => handleSubmit(e, inputs, imageList, imageDeleteList)}
 				style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
 			>
 				<TextField
@@ -235,10 +189,11 @@ const FormInput = ({ editData, setEditData }) => {
 							Выбранное изображение профиля:
 						</Typography>
 						<img
+							// Сделать проверку на файл + отмена и изм на сохр
 							src={
-								editData
-									? inputs.imageProfile
-									: URL.createObjectURL(inputs.imageProfile)
+								isFile(inputs.imageProfile)
+									? URL.createObjectURL(inputs.imageProfile)
+									: inputs.imageProfile
 							}
 							alt='Profile'
 							style={{
@@ -256,7 +211,6 @@ const FormInput = ({ editData, setEditData }) => {
 					variant='contained'
 					color={editData ? 'secondary' : 'primary'}
 					disabled={createModelMutation.isLoading}
-					onClick={editData ? handleSubmit : null}
 				>
 					{createModelMutation.isPending
 						? 'Сохранение...'
@@ -264,13 +218,13 @@ const FormInput = ({ editData, setEditData }) => {
 						? 'Изменить'
 						: 'Сохранить'}
 				</Button>
-				{editData ? (
+				{editData && (
 					<Button
 						variant='outlined'
 						onClick={() => {
 							clearImages()
 							clearInputs()
-							setEditData('')
+							setEditData(undefined)
 						}}
 						color='error'
 						sx={{
@@ -286,26 +240,26 @@ const FormInput = ({ editData, setEditData }) => {
 					>
 						Отмена
 					</Button>
-				) : (
-					<span></span>
 				)}
 			</form>
 			<ImageModal
 				open={isModalOpen}
 				key={inputs.id}
+				editImages={data?.images}
 				onClose={() => setModalOpen(false)}
-				onSave={({ images, imageProfile }) => {
+				onSave={({ images, selectedImageIndexImageList }) => {
 					setImageList(images)
 					setInputs({
 						...inputs,
-						imageProfile: imageProfile
+						imageProfile: selectedImages[selectedImageIndexImageList]
 					})
 				}}
-				onClear={clearImages} // Новый пропс для очистки
+				onClear={clearImages}
 				selectedImages={selectedImages}
 				selectedImageIndex={selectedImageIndex}
 				setSelectedImages={setSelectedImages}
 				setSelectedImageIndex={setSelectedImageIndex}
+				setImageDeleteList={setImageDeleteList}
 			/>
 		</Box>
 	)

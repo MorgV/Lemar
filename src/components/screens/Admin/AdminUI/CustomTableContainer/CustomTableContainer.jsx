@@ -18,7 +18,7 @@ import modelsClient, {
 import TableRowMemo from './TableRow/TableRow'
 import apiClient from '../../../../../shared/api/axios-request'
 
-const CustomTableContainer = ({ searchQuery, setEditData }) => {
+const CustomTableContainer = ({ searchQuery, setEditData, editData }) => {
 	const queryClient = useQueryClient()
 	const [tableParams, setTableParams] = useState({
 		page: 0,
@@ -53,6 +53,9 @@ const CustomTableContainer = ({ searchQuery, setEditData }) => {
 					modelsClient.getAllModelsInfiniteQueryOptions.queryKey,
 					updatedModels
 				)
+			}
+			if (editData?.id == deletedId) {
+				setEditData({})
 			}
 		},
 		onError: error => {

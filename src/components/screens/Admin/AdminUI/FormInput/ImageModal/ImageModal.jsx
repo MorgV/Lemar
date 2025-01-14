@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
 	Modal,
 	Box,
@@ -8,6 +8,7 @@ import {
 	Alert
 } from '@mui/material'
 import { Close } from '@mui/icons-material'
+import { REACT_APP_API_URL } from '../../../../../../utils/constans'
 
 const ImageModal = ({
 	open,
@@ -16,9 +17,16 @@ const ImageModal = ({
 	setSelectedImages,
 	selectedImageIndex,
 	setSelectedImageIndex,
-	onSave
+	onSave,
+	editImages,
+	setImageList,
+	imageList,
+	setImageDeleteList
 }) => {
 	const [error, setError] = useState('') // Для хранения текста ошибки
+	const [deletedArrayIdImagesOnServe, setDeletedArrayIdImagesOnServe] =
+		useState([])
+
 	const handleFileChange = event => {
 		const files = Array.from(event.target.files)
 		setSelectedImages([...selectedImages, ...files])
@@ -30,15 +38,26 @@ const ImageModal = ({
 		setError('') // Убираем ошибку при очистке
 	}
 
-	const handleRemoveImage = index => {
+	const handleRemoveImage = (index, file) => {
+		console.log(file)
 		const newImages = selectedImages.filter((_, i) => i !== index)
 		setSelectedImages(newImages)
 		if (index === selectedImageIndex) {
 			setSelectedImageIndex(null) // Сбрасываем выбор, если удалено выбранное изображение
 		}
+		if (isFile(file) == false) {
+			editImages.map(el => {
+				if (el.URL == file) {
+					console.log(el.id, ' deleted')
+					setDeletedArrayIdImagesOnServe(prevState => [...prevState, el.id])
+					console.log(deletedArrayIdImagesOnServe, el.id)
+				}
+			})
+		}
 	}
 
 	const handleImageClick = index => {
+		console.log(index)
 		setSelectedImageIndex(index === selectedImageIndex ? null : index)
 	}
 
@@ -52,17 +71,26 @@ const ImageModal = ({
 			return
 		}
 
-		const imageProfile = selectedImages[selectedImageIndex]
 		onSave({
 			images: selectedImages,
-			imageProfile
+			selectedImageIndexImageList: selectedImageIndex
 		})
+		setImageDeleteList(deletedArrayIdImagesOnServe)
 		onClose()
 		setError('') // Сбрасываем ошибку после успешного сохранения
 	}
 	const isFile = el => {
 		return el instanceof File ? true : false
 	}
+
+	useEffect(() => {
+		if (editImages) {
+			let imagesOnServe = editImages?.map(el => el.URL) // el.i - serv im || imageDeleteList[] то что мы вернем
+			console.log(editImages, 'iwifweoifwijweioj')
+			console.log('qwdqwdjp')
+			setSelectedImages(imagesOnServe)
+		}
+	}, [editImages])
 
 	return (
 		<Modal open={open} onClose={onClose}>
@@ -185,7 +213,7 @@ const ImageModal = ({
 						>
 							<img
 								src={isFile(file) ? URL.createObjectURL(file) : file}
-								alt={file.name}
+								alt={isFile(file) ? file.name : ''}
 								style={{
 									width: '100%',
 									maxHeight: '400px',
@@ -210,11 +238,11 @@ const ImageModal = ({
 							)}
 
 							<Typography variant='caption' sx={{ mt: 1 }}>
-								{file.name}
+								{isFile(file) ? file.name : ''}
 							</Typography>
 
 							<IconButton
-								onClick={() => handleRemoveImage(index)}
+								onClick={() => handleRemoveImage(index, file)}
 								color='error'
 								sx={{
 									position: 'absolute',

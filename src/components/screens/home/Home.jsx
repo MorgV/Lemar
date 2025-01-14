@@ -9,12 +9,12 @@ function Home() {
 	// const navigate = useNavigate()
 
 	return (
-		<>
+		<Layout>
 			<VidioUI />
 			<Onas />
 			<ModelsVS />
 			{/* <Footer /> */}
-		</>
+		</Layout>
 	)
 }
 

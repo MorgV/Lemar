@@ -6,7 +6,7 @@ import SearchInput from '../SearchInput/SearchInput'
 
 export default function SimpleTable() {
 	const [searchQuery, setSearchQuery] = useState('')
-	const [editData, setEditData] = useState(null) // Отслеживает текущую редактируемую строку
+	const [editData, setEditData] = useState(undefined) // Отслеживает текущую редактируемую строку
 
 	//
 
@@ -22,6 +22,7 @@ export default function SimpleTable() {
 				/>
 				<CustomTableContainer
 					setEditData={setEditData}
+					editData={editData}
 					searchQuery={searchQuery}
 				/>
 			</Box>
