@@ -22,3 +22,13 @@
 	max-width: 400px;
 	color: $accent;
 }
+.card {
+	opacity: 0; // Начальное состояние
+	transform: translateY(20px); // Смещение вниз
+	transition: opacity 0.5s ease, transform 0.5s ease; // Анимация появления
+}
+
+.card.visible {
+	opacity: 1; // Плавное появление
+	transform: translateY(0); // Возвращение в исходное положение
+}

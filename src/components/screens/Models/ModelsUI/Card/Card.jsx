@@ -1,39 +1,45 @@
-import starIcon from './star.svg'
+/* eslint-disable react/display-name */
+import React, { useEffect, useState } from 'react'
+import classNames from 'clsx'
 import styles from './style.module.scss'
-import boysPhoto from '../../../../../../public/images/boy.jpg'
 import { REACT_APP_API_URL } from '../../../../../utils/constans'
 
-const Card = ({ data }) => {
-	const { height, shoeSize, gender, FI, age, imageProfile } = data
-	console.log(imageProfile)
-	return (
-		<article className={styles.card}>
-			<a href='#' className={styles.link}></a>
-			<img
-				src={''}
-				srcSet={`${REACT_APP_API_URL}${imageProfile}`}
-				alt={FI}
-				className={styles.img}
-			/>
+const Card = React.memo(
+	({ data, delayInSeconds }) => {
+		const { height, shoeSize, gender, FI, age, imageProfile, id } = data
+		const [isVisible, setIsVisible] = useState(false)
 
-			<div className={styles.descWrapper}>
-				<div className={styles.titleWrapper}>
-					<h3 className={styles.title}>{FI}</h3>
-					<div className={styles.rating}>
-						<img src={starIcon} alt='starIcon' />
-						{gender}
+		useEffect(() => {
+			const timeout = setTimeout(() => {
+				setIsVisible(true)
+			}, delayInSeconds * 1000) // Умножаем задержку на 1000 для перевода в миллисекунды
+			return () => clearTimeout(timeout)
+		}, [delayInSeconds])
+
+		return (
+			<article
+				className={classNames(styles.card, {
+					[styles.visible]: isVisible
+				})}
+			>
+				<a href={`${window.location.pathname}/${id}`} alt=''>
+					<img
+						src={`${REACT_APP_API_URL}${imageProfile}`}
+						alt='Profile'
+						className={styles.img}
+					/>
+					<div className={styles.info}>
+						<p> {FI}</p>
+						<p>Возраст: {age}</p>
+						<p>Рост: {height} см</p>
 					</div>
-				</div>
-
-				<p className={styles.desc}>{age}</p>
-				<p className={styles.date}>{shoeSize}</p>
-
-				<p className={styles.price}>
-					<strong>${height}</strong> night
-				</p>
-			</div>
-		</article>
-	)
-}
+				</a>
+			</article>
+		)
+	},
+	(prevProps, nextProps) => {
+		return JSON.stringify(prevProps.data) === JSON.stringify(nextProps.data)
+	}
+)
 
 export default Card

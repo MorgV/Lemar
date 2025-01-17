@@ -1,4 +1,3 @@
-// Импортируем axios
 import axios from 'axios'
 import { REACT_APP_API_URL } from '../../utils/constans'
 import {
@@ -114,7 +113,7 @@ export const getAllModels = async ({ tableParams, searchQuery }) => {
 }
 export const useModel = id => {
 	return useQuery({
-		queryKey: [`model`, id],
+		queryKey: ['model', id],
 		queryFn: () => getModelById(id),
 		enabled: !!id
 	})

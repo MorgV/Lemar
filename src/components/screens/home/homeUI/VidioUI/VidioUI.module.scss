@@ -33,18 +33,23 @@
 	// margin: 0 30% 0 0;
 	top: 25%;
 	padding: 0 30px;
+	h1,
+	h2,
+	h3 {
+		font-weight: normal;
+	}
 	h2 {
 		font-size: 40px;
+
+		// font-family: $default-font;
 	}
 	h1 {
 		font-size: 200px;
 		margin-top: -90px;
-		font-family: serif;
 	}
 	h3 {
 		margin-top: -70px;
 		// max-width: 570px;
-		font-weight: normal;
 	}
 	.a {
 		margin-top: 30px;

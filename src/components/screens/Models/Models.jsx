@@ -1,56 +1,48 @@
-import Layout from '../../layout/Layout'
-import styles from './Models.module.scss'
-
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { modelsClient } from '../../../shared/api/axios-request'
-import Card from './ModelsUI/Card/Card'
-import { useState } from 'react'
+import Layout from '../../layout/Layout'
+import styles from './Models.module.scss'
+import CardList from './ModelsUI/CardList/CardList'
+
 function Models() {
-	// let models = []
-	// const getModels = async (page = 1, perPage = 1, searchStroke = '') => {
-	// 	try {
-	// 		const response = await axios.get('http://localhost:5000/Lemar/models', {
-	// 			page,
-	// 			perPage,
-	// 			searchStroke
-	// 		})
-	// 		const myArray = response.data // Данные из запроса
-	// 		return myArray // Вернуть массив, если нужно
-	// 	} catch (error) {
-	// 		console.error('Ошибка:', error)
-	// 		return []
-	// 	}
-	// }
 	const [tableParams, setTableParams] = useState({
 		page: 0,
-		rowsPerPage: 20,
+		rowsPerPage: 6,
 		sortBy: 'id',
 		sortDirection: 'asc'
 	})
-	const { data, error, isPending, isError, isFetching } = useQuery({
-		...modelsClient.getAllModelsInfiniteQueryOptions(
+
+	const { data, error, isLoading, isError, isFetching } = useQuery(
+		modelsClient.getAllModelsInfiniteQueryOptions(
 			{ tableParams },
 			{ searchQuery: '' }
 		)
-	})
+	)
 
-	console.log(data)
-	if (isPending) {
+	const loadMore = () => {
+		setTableParams(prev => ({
+			...prev,
+			rowsPerPage: prev.rowsPerPage + 3
+		}))
+	}
+
+	if (isLoading) {
 		return <div>Loading...</div>
 	}
-	if (error) {
-		return <div>error : {error}</div>
+	if (isError) {
+		return <div>Error: {error.message}</div>
 	}
 
 	return (
 		<Layout>
 			<main className={styles.main}>
 				<div className='container'>
-					<div className={styles.main__cards}>
-						{data.models.map((item, index) => {
-							return <Card data={item} key={index} />
-						})}
-					</div>
+					<CardList
+						data={data?.models}
+						onLoadMore={loadMore}
+						isFetching={isFetching}
+					/>
 				</div>
 			</main>
 		</Layout>

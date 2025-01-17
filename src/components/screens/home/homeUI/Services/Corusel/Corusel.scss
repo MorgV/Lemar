@@ -1,0 +1,237 @@
+@import 'src/assets/styles/variables';
+* {
+	font-family: 'ChronicleDisplay';
+}
+$border-color: #fff5;
+$w-image: 400px;
+$calculate: calc(3 / 2);
+
+main {
+	position: relative;
+	height: 100vh;
+	width: 100%;
+	margin-bottom: 150px;
+}
+.carousel {
+	margin-top: -80px;
+	width: 100%;
+	height: inherit;
+	overflow: hidden;
+
+	.list {
+		min-height: 100%;
+		position: relative;
+
+		&::before {
+			position: absolute;
+			width: var($w-image);
+			min-height: 100%;
+			content: '';
+			top: 0;
+			left: calc(100% - #{$w-image} * #{$calculate});
+			border-left: 1px solid var($border-color);
+			border-right: 1px solid var($border-color);
+			z-index: 10;
+			pointer-events: none;
+		}
+
+		&::after {
+			position: absolute;
+			top: 50px;
+			left: 50px;
+			content: '';
+			background-color: red;
+			width: 400px;
+			min-height: 300px;
+			z-index: 10;
+			pointer-events: none;
+			border-radius: 20px 50px 110px 230px;
+			filter: blur(150px);
+			opacity: 0.6;
+		}
+
+		.item {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			min-height: 100%;
+
+			&.active,
+			&.other_1,
+			&.other_2 {
+				display: block;
+			}
+
+			&.active {
+				z-index: 2;
+				opacity: 1;
+				transition: opacity 1s ease;
+				.main-content {
+					animation: showContent 1s ease-in-out 1 forwards;
+				}
+			}
+
+			&.other_1,
+			&.other_2 {
+				pointer-events: none;
+				opacity: 0;
+			}
+
+			.image {
+				width: var($w-image);
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: calc(100% - calc($w-image * $calculate));
+
+				padding: 20px;
+				display: flex;
+				flex-direction: column;
+				justify-content: end;
+				align-items: center;
+				font-weight: 500;
+
+				img {
+					width: 90%;
+					margin-bottom: 20px;
+					filter: drop-shadow(0 150px 50px #9e0c0c55);
+				}
+
+				figcaption {
+					font-family: 'Aboreto';
+					font-weight: bold;
+					font-size: 2em;
+					text-align: right;
+					margin-bottom: 30px;
+					width: 70%;
+				}
+			}
+
+			.main-content {
+				height: 100%;
+				display: grid;
+				grid-template-columns: calc(100% - calc($w-image) * $calculate);
+
+				.content {
+					padding: 100px 20px 100px 80px;
+
+					h2 {
+						font-size: 3em;
+						font-family: 'Aboreto';
+					}
+
+					.price {
+						font-family: 'Aboreto';
+						font-size: 2em;
+						margin: 20px 0;
+					}
+
+					.addToCard {
+						background-color: #4f8b69;
+						color: #fff;
+						padding: 10px 30px;
+						font-family: Poppins;
+						font-size: large;
+						font-weight: 500;
+						border-radius: 30px;
+						border: none;
+						margin-top: 20px;
+					}
+				}
+			}
+		}
+	}
+
+	.arrows {
+		position: absolute;
+		bottom: 20px;
+		width: calc(100% - calc($w-image * $calculate));
+		display: grid;
+		grid-template-columns: repeat(2, 50px);
+		grid-template-rows: 50px;
+		justify-content: end;
+		gap: 10px;
+		z-index: 10;
+
+		button {
+			background-color: transparent;
+			border: 1px solid $border-color;
+			color: #fff;
+			font-family: monospace;
+			font-size: large;
+			font-weight: bold;
+			line-height: 0;
+			box-shadow: 0 10px 40px #5555;
+			cursor: pointer;
+			transition: 0.5s;
+
+			&:hover {
+				background-color: #eee5;
+			}
+		}
+	}
+}
+
+@keyframes showContent {
+	from {
+		clip-path: circle(0% at 70% 50%);
+	}
+	to {
+		clip-path: circle(100% at 70% 50%);
+	}
+}
+
+@keyframes effectNext {
+	from {
+		transform: translateX(calc(var(--transform-from)));
+	}
+	to {
+		transform: translateX(calc(var(--transform-from) - $w-image));
+	}
+}
+
+@keyframes effectPrev {
+	from {
+		transform: translateX(calc(var(--transform-from)));
+	}
+	to {
+		transform: translateX(calc(var(--transform-from) + $w-image));
+	}
+}
+
+@media screen and (max-width: 1023px) {
+	:root {
+		$calculate: 1;
+		$w-image: 400px;
+	}
+
+	.carousel .list .item .main-content .content h2 {
+		font-size: 3em;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.carousel .list .item {
+		.image {
+			width: 100%;
+			left: 0;
+			justify-content: center;
+
+			figcaption {
+				color: #fff;
+				width: 100%;
+				text-align: center;
+			}
+		}
+
+		.main-content .content {
+			display: none;
+		}
+	}
+
+	.arrows {
+		left: 50%;
+		justify-content: center;
+	}
+}
