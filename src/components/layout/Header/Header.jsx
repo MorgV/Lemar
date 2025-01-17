@@ -3,19 +3,25 @@ import './Header.scss'
 import { RxHamburgerMenu } from 'react-icons/rx'
 import { RxCross1 } from 'react-icons/rx'
 
-const Header = () => {
+const Header = ({ rr }) => {
 	let [burgerState, setBurgerState] = useState(false)
-	window.addEventListener('scroll', () => {
-		const scrollPos = window.scrollY
-		const headerObg = document.getElementById('header')
+	if (rr === undefined) {
+		window.addEventListener(
+			'scroll',
+			() => {
+				const scrollPos = window.scrollY
+				const headerObg = document.getElementById('header')
 
-		if (scrollPos >= 350) {
-			headerObg.classList.add('header_fixed')
-		} else {
-			headerObg.classList.remove('header_fixed')
-		}
-		//className clsn
-	})
+				if (scrollPos >= 350 && rr === false) {
+					headerObg.classList.add('header_fixed')
+				} else {
+					headerObg.classList.remove('header_fixed')
+				}
+			}
+
+			//className clsn
+		)
+	}
 
 	const heandlerSwapBurger = () => {
 		document.body.style.overflow = burgerState ? '' : 'hidden'
@@ -26,18 +32,6 @@ const Header = () => {
 			<div className='container'>
 				<div className='header__body'>
 					<a href='/' className='header__logo'></a>
-					{/* <div
-						onClick={() => setBurgerState(!burgerState)}
-						className={burgerState ? 'header__burger active' : 'header__burger'}
-					>
-						<span>
-							{!burgerState ? (
-								<RxHamburgerMenu size={'25px'} />
-							) : (
-								<RxCross1 size={'25px'} />
-							)}
-						</span>
-					</div> */}
 					<label className='hamburger'>
 						<input type='checkbox' onChange={() => heandlerSwapBurger()} />
 						<svg viewBox='0 0 32 32'>

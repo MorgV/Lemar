@@ -1,7 +1,6 @@
 @import 'src/assets/styles/variables';
 
 .wrapper {
-	padding-top: 120px;
 	// overflow-y: hidden;
 	// opacity: 0;
 	h1 {
@@ -20,10 +19,4 @@
 }
 
 @media (max-width: $mobile) {
-	.wrapper__list {
-		display: block;
-		p {
-			padding: 30px 0 0 0;
-		}
-	}
 }

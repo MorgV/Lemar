@@ -20,7 +20,7 @@ const CardListWithLoadMore = ({ data, onLoadMore, isFetching }) => {
 						key={item.id}
 						data={item}
 						delayInSeconds={
-							dataLength ? (index - dataLength) * 0.2 : index * 0.2
+							dataLength ? (index - dataLength) * 0.3 : index * 0.3
 						}
 					/>
 				))}

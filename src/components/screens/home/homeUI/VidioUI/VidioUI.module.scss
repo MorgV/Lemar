@@ -3,7 +3,10 @@
 .home {
 	height: 100vh;
 	max-width: 1280px;
-	margin: 0 auto;
+	margin: 0 auto 300px auto;
+	@media (max-width: '970px') {
+		margin: 0 auto 120px auto;
+	}
 	&::before {
 		content: '';
 		position: absolute;

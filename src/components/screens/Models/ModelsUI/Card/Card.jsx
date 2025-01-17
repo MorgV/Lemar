@@ -6,13 +6,18 @@ import { REACT_APP_API_URL } from '../../../../../utils/constans'
 
 const Card = React.memo(
 	({ data, delayInSeconds }) => {
+		console.log('render Card')
 		const { height, shoeSize, gender, FI, age, imageProfile, id } = data
 		const [isVisible, setIsVisible] = useState(false)
 
 		useEffect(() => {
-			const timeout = setTimeout(() => {
-				setIsVisible(true)
-			}, delayInSeconds * 1000) // Умножаем задержку на 1000 для перевода в миллисекунды
+			const timeout = setTimeout(
+				() => {
+					setIsVisible(true)
+				},
+				delayInSeconds * 1000,
+				300
+			) // Умножаем задержку на 1000 для перевода в миллисекунды
 			return () => clearTimeout(timeout)
 		}, [delayInSeconds])
 
@@ -24,6 +29,7 @@ const Card = React.memo(
 			>
 				<a href={`${window.location.pathname}/${id}`} alt=''>
 					<img
+						loading='lazy'
 						src={`${REACT_APP_API_URL}${imageProfile}`}
 						alt='Profile'
 						className={styles.img}

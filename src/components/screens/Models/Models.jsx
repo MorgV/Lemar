@@ -6,6 +6,7 @@ import styles from './Models.module.scss'
 import CardList from './ModelsUI/CardList/CardList'
 
 function Models() {
+	console.log('render models')
 	const [tableParams, setTableParams] = useState({
 		page: 0,
 		rowsPerPage: 6,
@@ -35,7 +36,7 @@ function Models() {
 	}
 
 	return (
-		<Layout>
+		<Layout screen={'models'}>
 			<main className={styles.main}>
 				<div className='container'>
 					<CardList

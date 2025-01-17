@@ -10,7 +10,7 @@ const Layout = ({ children, bgImage, heading = '' }) => {
 			className={cn(styles.wrapper, { [styles.otherPage]: !!heading })}
 			style={{ backgroundImage: `url(${bgImage})` }}
 		>
-			<Header />
+			<Header rr={screen == 'models' ? false : undefined} />
 			{children && <div>{children}</div>}
 		</section>
 	)
