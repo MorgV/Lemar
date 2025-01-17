@@ -7,7 +7,7 @@ import { REACT_APP_API_URL } from '../../../../../utils/constans'
 const Card = React.memo(
 	({ data, delayInSeconds }) => {
 		console.log('render Card')
-		const { height, shoeSize, gender, FI, age, imageProfile, id } = data
+		const { height, FI, age, imageProfile, id } = data
 		const [isVisible, setIsVisible] = useState(false)
 
 		useEffect(() => {

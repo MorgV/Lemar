@@ -41,24 +41,42 @@ export const modelsClient = {
 		console.log('Updating model:', data, id)
 		return postData(`/models/${id}`, data) // Используем postData
 	},
-	deleteModel: async id => {
-		try {
-			console.log('Удаляем модель с ID:', id)
-			const response = await apiClient(`/models/${id}`, {
-				method: 'DELETE'
-			})
-			// Проверяем статус ответа, если сервер возвращает его в теле
-			if (response.status !== 200) {
-				throw new Error(response.message || 'Ошибка при удалении модели')
-			}
-			console.log('Удаляем модель с ID:', response)
+	getModelsSummaryInfiniteQueryOptions: (
+		{ tableParams = {} },
+		{ searchQuery = '' } = {}
+	) => {
+		return infiniteQueryOptions({
+			queryKey: ['models', 'list', tableParams, searchQuery],
+			queryFn: ({ queryKey }) => {
+				// Извлекаем параметры из queryKey
+				const [, , tableParams, searchQuery] = queryKey
 
-			return response.data // Успешный результат
-		} catch (error) {
-			console.error('Ошибка при удалении модели:', 'e12e123')
-			throw error // Пробрасываем ошибку, чтобы она обрабатывалась далее (например, в onError)
-		}
+				// Проверяем наличие tableParams
+				return getAllModelsSummary(
+					tableParams ? { tableParams, searchQuery } : {}
+				)
+			},
+			placeholderData: keepPreviousData
+		})
 	}
+	// deleteModel: async id => {
+	// 	try {
+	// 		console.log('Удаляем модель с ID:', id)
+	// 		const response = await apiClient(`/models/${id}`, {
+	// 			method: 'DELETE'
+	// 		})
+	// 		// Проверяем статус ответа, если сервер возвращает его в теле
+	// 		if (response.status !== 200) {
+	// 			throw new Error(response.message || 'Ошибка при удалении модели')
+	// 		}
+	// 		console.log('Удаляем модель с ID:', response)
+
+	// 		return response.data // Успешный результат
+	// 	} catch (error) {
+	// 		console.error('Ошибка при удалении модели:', 'e12e123')
+	// 		throw error // Пробрасываем ошибку, чтобы она обрабатывалась далее (например, в onError)
+	// 	}
+	// }
 }
 // Функция для GET-запроса
 export const getAll = async (endpoint, params = {}) => {
@@ -111,6 +129,21 @@ export const getAllModels = async ({ tableParams, searchQuery }) => {
 	})
 	return response
 }
+export const getAllModelsSummary = async ({ tableParams, searchQuery }) => {
+	console.log(tableParams)
+
+	const response = await getAll('/modelssummary', {
+		params: {
+			page: tableParams.page + 1, // API pages are 1-based
+			perPage: tableParams.rowsPerPage,
+			search: searchQuery,
+			sortBy: tableParams.sortBy,
+			sortDirection: tableParams.sortDirection
+		}
+	})
+	console.log(response)
+	return response
+}
 export const useModel = id => {
 	return useQuery({
 		queryKey: ['model', id],
@@ -126,30 +159,6 @@ const getModelById = async id => {
 	} catch (error) {
 		console.error('Ошибка:', error)
 		return null // Возвращаем null в случае ошибки
-	}
-}
-
-export const saveModel = async ({ formData, id }) => {
-	const endpoint = id ? `/models/${id}` : `/models`
-	console.log(endpoint, formData)
-	if (id) {
-		const response = await apiClient.put({
-			url: endpoint,
-			formData,
-			headers: {
-				'Content-Type': 'multipart/form-data'
-			}
-		})
-		return response.data
-	} else {
-		const response = await apiClient.post({
-			url: endpoint,
-			data: formData,
-			headers: {
-				'Content-Type': 'multipart/form-data'
-			}
-		})
-		return response.data
 	}
 }
 

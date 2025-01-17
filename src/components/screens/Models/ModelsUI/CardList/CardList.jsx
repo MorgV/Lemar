@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 
 const CardListWithLoadMore = ({ data, onLoadMore, isFetching }) => {
 	const [dataLength, setDataLength] = useState(0) // Состояние для хранения длины данных
-
+	console.log(data)
 	useEffect(() => {
 		if (data) {
 			setDataLength(data.length)
