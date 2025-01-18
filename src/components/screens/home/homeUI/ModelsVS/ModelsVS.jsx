@@ -2,14 +2,13 @@ import styles from './ModelsVS.module.scss'
 
 function ModelsVS() {
 	// const { isAuth } = useAuth()
-	// const navigate = useNavigate()
 	return (
 		<div className={styles.wrapper}>
 			<div className={styles.vs}>
-				<a className={styles.boy}>
+				<a href='/models' className={styles.boy}>
 					<h1>Boys</h1>
 				</a>
-				<a className={styles.girl}>
+				<a href='/models' className={styles.girl}>
 					<h1>Girls</h1>
 				</a>
 			</div>

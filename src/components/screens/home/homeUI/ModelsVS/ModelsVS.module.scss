@@ -9,13 +9,17 @@
 }
 .vs {
 	cursor: pointer;
-
 	height: 90%;
 	width: 100%;
 	display: flex;
 	justify-content: center;
 	gap: 30px;
 	position: relative;
+	a {
+		text-decoration: none;
+		color: white;
+		opacity: 0.7;
+	}
 	h1 {
 		font-size: 40px;
 		position: absolute;
