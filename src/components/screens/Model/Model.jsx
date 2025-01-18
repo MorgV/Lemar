@@ -9,6 +9,7 @@ import ArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 ArrowRightIcon
 import { CSSTransition } from 'react-transition-group'
 import './Model.scss'
+import { M_NUMBER } from '../../../utils/constans'
 
 const Model = () => {
 	const { id } = useParams() // Получение id из URL
@@ -39,6 +40,24 @@ const Model = () => {
 	// Функция для закрытия анимации
 	const handleClose = () => setIsVisible(false)
 
+	const handleClick = () => {
+		const phoneNumber = M_NUMBER // Номер телефона в международном формате
+		const message = `Здравствуйте, я хочу выбрать модель! Меня интересует ${model.FI} рост ${model.height}` // Ваше сообщение
+		const isMobile =
+			/Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
+				navigator.userAgent
+			)
+
+		// URL для WhatsApp Web или мобильной версии
+		const whatsappUrl = isMobile
+			? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+			: `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(
+					message
+			  )}`
+
+		// Открытие WhatsApp
+		window.open(whatsappUrl, '_blank')
+	}
 	return (
 		<CSSTransition
 			in={isVisible}
@@ -134,6 +153,7 @@ const Model = () => {
 						<Button
 							variant='contained'
 							sx={{ color: '#111', bgcolor: '#fff', borderRadius: 0 }}
+							onClick={handleClick}
 						>
 							Выбрать модель
 						</Button>

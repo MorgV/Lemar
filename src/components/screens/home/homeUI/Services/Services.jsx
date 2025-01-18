@@ -32,7 +32,7 @@ const Services = () => {
 	]
 
 	return (
-		<div className='App'>
+		<div style={{ height: '100vh', margin: '100px 0' }}>
 			<Carousel items={items} />
 		</div>
 	)
