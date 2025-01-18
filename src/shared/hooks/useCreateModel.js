@@ -58,7 +58,29 @@ const useUpdateModelForm = ({
 		formData.append('age', inputs.age)
 
 		if (inputs.imageProfile instanceof File) {
+			// Это объект File
 			formData.append('imageProfile', inputs.imageProfile)
+			console.log(inputs.imageProfile, 'file')
+		} else if (
+			typeof inputs.imageProfile === 'string' &&
+			isValidURL(inputs.imageProfile)
+		) {
+			// Это строка URL
+			formData.append('imageProfile', inputs.imageProfile)
+			console.log('Это URL:', inputs.imageProfile)
+		} else {
+			console.log('Ни файл, ни URL')
+		}
+
+		// Функция проверки валидности URL
+		function isValidURL(string) {
+			try {
+				const url1 = new URL(string)
+				console.log(url1)
+				return true
+			} catch (_) {
+				return false
+			}
 		}
 
 		let imageListNoURL = imageList.filter(image => {

@@ -7,7 +7,6 @@ import CardList from './ModelsUI/CardList/CardList'
 
 function Models() {
 	console.log('render models')
-	// /:id/summary
 	const [tableParams, setTableParams] = useState({
 		page: 0,
 		rowsPerPage: 6,
@@ -16,7 +15,7 @@ function Models() {
 	})
 
 	const { data, error, isLoading, isError, isFetching } = useQuery(
-		modelsClient.getModelsSummaryInfiniteQueryOptions(
+		modelsClient.getAllModelsInfiniteQueryOptions(
 			{ tableParams },
 			{ searchQuery: '' }
 		)
