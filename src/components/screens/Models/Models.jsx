@@ -9,7 +9,7 @@ function Models() {
 	console.log('render models')
 	const [tableParams, setTableParams] = useState({
 		page: 0,
-		rowsPerPage: 6,
+		rowsPerPage: 8,
 		sortBy: 'id',
 		sortDirection: 'asc'
 	})
@@ -24,7 +24,7 @@ function Models() {
 	const loadMore = () => {
 		setTableParams(prev => ({
 			...prev,
-			rowsPerPage: prev.rowsPerPage + 3
+			rowsPerPage: prev.rowsPerPage + 4
 		}))
 	}
 
