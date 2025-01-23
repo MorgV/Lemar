@@ -58,25 +58,26 @@ export const modelsClient = {
 			},
 			placeholderData: keepPreviousData
 		})
-	}
-	// deleteModel: async id => {
-	// 	try {
-	// 		console.log('Удаляем модель с ID:', id)
-	// 		const response = await apiClient(`/models/${id}`, {
-	// 			method: 'DELETE'
-	// 		})
-	// 		// Проверяем статус ответа, если сервер возвращает его в теле
-	// 		if (response.status !== 200) {
-	// 			throw new Error(response.message || 'Ошибка при удалении модели')
-	// 		}
-	// 		console.log('Удаляем модель с ID:', response)
+	},
+	deleteModel: async id => {
+		try {
+			console.log('Удаляем модель с ID:', id)
+			const response = await apiClient(`/models/${id}`, {
+				method: 'DELETE'
+			})
+			// Проверяем статус ответа, если сервер возвращает его в теле
+			console.log(response.data)
+			if (response.data.status != 'success') {
+				throw new Error(response.data.message || 'Ошибка при удалении модели')
+			}
+			console.log('Удаляем модель с ID:', response)
 
-	// 		return response.data // Успешный результат
-	// 	} catch (error) {
-	// 		console.error('Ошибка при удалении модели:', 'e12e123')
-	// 		throw error // Пробрасываем ошибку, чтобы она обрабатывалась далее (например, в onError)
-	// 	}
-	// }
+			return response.data // Успешный результат
+		} catch (error) {
+			console.error('Ошибка при удалении модели:', 'e12e123')
+			throw error // Пробрасываем ошибку, чтобы она обрабатывалась далее (например, в onError)
+		}
+	}
 }
 // Функция для GET-запроса
 export const getAll = async (endpoint, params = {}) => {
@@ -104,17 +105,17 @@ export const postData = async (endpoint, data) => {
 		throw error
 	}
 }
-export const deleteModel = async id => {
-	try {
-		// Отправляем DELETE-запрос по указанному ID
-		const response = await apiClient.delete(`/models/${id}`)
-		console.log(response)
-		return 0 // Возвращаем данные ответа сервера (например, сообщение об успешном удалении)
-	} catch (error) {
-		console.error('Ошибка при выполнении DELETE-запроса:', error)
-		throw error
-	}
-}
+// export const deleteModel = async id => {
+// 	try {
+// 		// Отправляем DELETE-запрос по указанному ID
+// 		const response = await apiClient.delete(`/models/${id}`)
+// 		console.log(response)
+// 		return 0 // Возвращаем данные ответа сервера (например, сообщение об успешном удалении)
+// 	} catch (error) {
+// 		console.error('Ошибка при выполнении DELETE-запроса:', error)
+// 		throw error
+// 	}
+// }
 export const getAllModels = async ({ tableParams, searchQuery }) => {
 	console.log(tableParams)
 
@@ -153,7 +154,7 @@ export const useModel = id => {
 }
 const getModelById = async id => {
 	try {
-		const { data } = await axios.get(`http://localhost:5000/models/${id}`)
+		const { data } = await axios.get(`http://lemar-models.ru:5000/models/${id}`)
 		console.log('Данные получены:', data)
 		return data // Возвращаем данные здесь
 	} catch (error) {

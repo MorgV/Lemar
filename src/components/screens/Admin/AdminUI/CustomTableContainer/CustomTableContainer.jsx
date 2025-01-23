@@ -10,11 +10,9 @@ import {
 	IconButton,
 	TablePagination
 } from '@mui/material'
-import { ArrowDownward, ArrowUpward, Delete, Edit } from '@mui/icons-material'
+import { ArrowDownward, ArrowUpward } from '@mui/icons-material'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import modelsClient, {
-	deleteModel
-} from '../../../../../shared/api/axios-request'
+import modelsClient from '../../../../../shared/api/axios-request'
 import TableRowMemo from './TableRow/TableRow'
 import apiClient from '../../../../../shared/api/axios-request'
 
