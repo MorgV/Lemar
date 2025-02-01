@@ -28,22 +28,21 @@ function Models() {
 		}))
 	}
 
-	if (isLoading) {
-		return <div>Loading...</div>
-	}
-	if (isError) {
-		return <div>Error: {error.message}</div>
-	}
-
 	return (
 		<Layout screen={'models'}>
 			<main className={styles.main}>
 				<div className='container'>
-					<CardList
-						data={data?.models}
-						onLoadMore={loadMore}
-						isFetching={isFetching}
-					/>
+					{isLoading ? (
+						<div>Loading...</div>
+					) : isError ? (
+						<div>Error: {error.message}</div>
+					) : (
+						<CardList
+							data={data?.models}
+							onLoadMore={loadMore}
+							isFetching={isFetching}
+						/>
+					)}
 				</div>
 			</main>
 		</Layout>

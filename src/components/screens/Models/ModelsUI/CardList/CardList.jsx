@@ -15,15 +15,17 @@ const CardListWithLoadMore = ({ data, onLoadMore, isFetching }) => {
 	return (
 		<div>
 			<div className={styles.main__cards}>
-				{data?.map((item, index) => (
-					<Card
-						key={item.id}
-						data={item}
-						delayInSeconds={
-							dataLength ? (index - dataLength) * 0.3 : index * 0.3
-						}
-					/>
-				))}
+				{dataLength
+					? data?.map((item, index) => (
+							<Card
+								key={item.id}
+								data={item}
+								delayInSeconds={
+									dataLength ? (index - dataLength) * 0.3 : index * 0.3
+								}
+							/>
+					  ))
+					: 'Models undefined'}
 			</div>
 
 			{data?.length > 0 && (
