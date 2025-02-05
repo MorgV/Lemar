@@ -3,7 +3,7 @@ import styles from './CardList.module.scss'
 import Card from '../Card/Card'
 import { useEffect, useState } from 'react'
 
-const CardListWithLoadMore = ({ data, onLoadMore, isFetching }) => {
+const CardList = ({ data, onLoadMore, isFetching }) => {
 	const [dataLength, setDataLength] = useState(0) // Состояние для хранения длины данных
 	console.log(data)
 	useEffect(() => {
@@ -48,4 +48,4 @@ const CardListWithLoadMore = ({ data, onLoadMore, isFetching }) => {
 	)
 }
 
-export default CardListWithLoadMore
+export default CardList
