@@ -15,7 +15,6 @@ function Home() {
 			<Onas />
 			<Services />
 			<ModelsVS />
-			<Footer />
 		</Layout>
 	)
 }

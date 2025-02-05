@@ -71,11 +71,11 @@ header {
 }
 
 .header__link {
-	color: $accent-blue;
+	color: $white;
 	text-decoration: none;
 	transition: all 0.3s ease 0s;
 	&:hover {
-		color: $white;
+		color: $accent-blue;
 	}
 }
 .hamburger {

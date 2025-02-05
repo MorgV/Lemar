@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import './Header.scss'
-import { RxHamburgerMenu } from 'react-icons/rx'
-import { RxCross1 } from 'react-icons/rx'
 
 const Header = ({ rr }) => {
 	let [burgerState, setBurgerState] = useState(false)

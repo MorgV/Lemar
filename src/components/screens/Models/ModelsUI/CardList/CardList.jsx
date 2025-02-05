@@ -40,7 +40,7 @@ const CardListWithLoadMore = ({ data, onLoadMore, isFetching }) => {
 						fullWidth
 						color=''
 					>
-						{isFetching ? 'Загружается...' : 'Загрузить еще'}
+						{isFetching ? 'Загружается...' : 'Показать еще'}
 					</Button>
 				</div>
 			)}

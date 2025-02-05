@@ -1,5 +1,16 @@
 @import './variables';
-
+a,
+div,
+button {
+	-webkit-tap-highlight-color: transparent;
+	outline: none;
+	box-shadow: none;
+	// &:focus,
+	// &:active {
+	// 	outline: none;
+	// 	box-shadow: none;
+	// }
+}
 body {
 	background-color: $white;
 	padding: 0;
@@ -96,4 +107,39 @@ img {
 	max-width: 560px;
 	width: 100%;
 	margin: 0 auto;
+}
+
+/* styles/global.scss */
+
+/* Глобальная настройка для всех элементов с прокруткой */
+* {
+	/* Включаем стили для прокрутки в Webkit-браузерах (Chrome, Safari, Edge) */
+	::-webkit-scrollbar {
+		width: 6px; /* Толщина вертикального скроллбара */
+		height: 6px; /* Толщина горизонтального скроллбара */
+	}
+
+	/* Настроим внешний вид "ползунка" прокрутки */
+	::-webkit-scrollbar-thumb {
+		background-color: #888; /* Серый цвет ползунка */
+		border-radius: 10px; /* Скругленные углы ползунка */
+		border: 2px solid #fff; /* Белая рамка вокруг ползунка */
+		transition: background-color 0.3s ease; /* Плавное изменение цвета */
+	}
+
+	/* При наведении на ползунок */
+	::-webkit-scrollbar-thumb:hover {
+		background-color: #555; /* Более темный серый при наведении */
+	}
+
+	/* Настроим внешний вид области прокрутки (дорожка) */
+	::-webkit-scrollbar-track {
+		background-color: #f1f1f1; /* Светлый фон дорожки */
+		border-radius: 10px; /* Скругленные углы дорожки */
+	}
+
+	/* Настроим внешний вид области прокрутки при наведении */
+	::-webkit-scrollbar-track:hover {
+		background-color: #ddd; /* Светлый оттенок при наведении */
+	}
 }
