@@ -78,6 +78,16 @@ function Models() {
 	const handleDeleteChip = (filterType, value) => {
 		handleFilterChange(filterType, value, false)
 	}
+
+	const handleSearchChange = event => {
+		const query = event.target.value
+		setSearchQuery(query)
+		setTableParams(prev => ({
+			...prev,
+			search: query
+		}))
+	}
+
 	const { data, error, isLoading, isError, isFetching } = useQuery(
 		modelsClient.getModelsSummaryInfiniteQueryOptions(
 			{
@@ -105,6 +115,7 @@ function Models() {
 				<SearchInput
 					searchQuery={searchQuery}
 					setSearchQuery={setSearchQuery}
+					onChange={handleSearchChange} // Передаем функцию для изменения searchQuery
 				/>
 
 				<Stack
@@ -187,8 +198,8 @@ function Models() {
 					{Object.entries(filters).map(([filterType, values]) =>
 						values.map(value => (
 							<Chip
-								key={`${filterType}-${value}`}
-								label={`${filterLabels[filterType]}: ${value}`}
+								key={`${filterType}-${value}`} // Исправили эту строку
+								label={`${filterLabels[filterType]}: ${value}`} // Исправили эту строку
 								onDelete={() => handleDeleteChip(filterType, value)}
 								sx={{
 									backgroundColor: gender !== 'female' ? '#01959f' : '#d95a8c',
@@ -196,7 +207,7 @@ function Models() {
 									'& .MuiChip-deleteIcon': {
 										color: '#fff',
 										'&:hover':
-											gender != 'female'
+											gender !== 'female'
 												? { color: '#b53471' }
 												: { color: '#01959f' }
 									}

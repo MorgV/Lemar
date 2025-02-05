@@ -2477,6 +2477,7 @@ uri-js@^4.2.2:
     clsx "^2.1.1"
     git "^0.1.5"
     js-cookie "^3.0.5"
+    lodash.debounce "^4.0.8"
     motion "^11.13.1"
     react "^18.3.1"
     react-dom "^18.3.1"

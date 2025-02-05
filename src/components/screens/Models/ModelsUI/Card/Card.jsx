@@ -26,8 +26,6 @@ const Card = React.memo(
 						alt='Profile'
 						className={styles.img}
 						effect='blur' // Эффект размытия при загрузке
-						width='300'
-						height='400'
 					/>
 					<div className={styles.info}>
 						<p>{FI}</p>
