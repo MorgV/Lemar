@@ -42,23 +42,26 @@ export const modelsClient = {
 		return postData(`/models/${id}`, data) // Используем postData
 	},
 	getModelsSummaryInfiniteQueryOptions: (
-		{ tableParams = {} },
-		{ searchQuery = '' } = {}
+		{ tableParams = {}, gender = '1', filters = {} },
+		{ searchQuery = '' } = {} // Убедитесь, что передаете searchQuery правильно
 	) => {
+		console.log(tableParams, gender, filters, searchQuery)
 		return infiniteQueryOptions({
-			queryKey: ['models', 'list', tableParams, searchQuery],
+			queryKey: ['models', 'list', tableParams, gender, filters, searchQuery],
 			queryFn: ({ queryKey }) => {
-				// Извлекаем параметры из queryKey
-				const [, , tableParams, searchQuery] = queryKey
+				const [, , tableParams, gender, filters, searchQuery] = queryKey
 
-				// Проверяем наличие tableParams
-				return getAllModelsSummary(
-					tableParams ? { tableParams, searchQuery } : {}
-				)
+				return getAllModelsSummary({
+					tableParams,
+					searchQuery, // Используем searchQuery здесь
+					gender,
+					filters
+				})
 			},
 			placeholderData: keepPreviousData
 		})
 	},
+
 	deleteModel: async id => {
 		try {
 			console.log('Удаляем модель с ID:', id)
@@ -105,17 +108,6 @@ export const postData = async (endpoint, data) => {
 		throw error
 	}
 }
-// export const deleteModel = async id => {
-// 	try {
-// 		// Отправляем DELETE-запрос по указанному ID
-// 		const response = await apiClient.delete(`/models/${id}`)
-// 		console.log(response)
-// 		return 0 // Возвращаем данные ответа сервера (например, сообщение об успешном удалении)
-// 	} catch (error) {
-// 		console.error('Ошибка при выполнении DELETE-запроса:', error)
-// 		throw error
-// 	}
-// }
 export const getAllModels = async ({ tableParams, searchQuery }) => {
 	console.log(tableParams)
 
@@ -130,21 +122,28 @@ export const getAllModels = async ({ tableParams, searchQuery }) => {
 	})
 	return response
 }
-export const getAllModelsSummary = async ({ tableParams, searchQuery }) => {
-	console.log(tableParams)
+export const getAllModelsSummary = async ({
+	tableParams,
+	searchQuery,
+	gender,
+	filters
+}) => {
+	console.log(tableParams, gender, filters, searchQuery)
 
 	const response = await getAll('/modelssummary', {
-		params: {
-			page: tableParams.page + 1, // API pages are 1-based
-			perPage: tableParams.rowsPerPage,
-			search: searchQuery,
-			sortBy: tableParams.sortBy,
-			sortDirection: tableParams.sortDirection
-		}
+		page: tableParams.page + 1, // API pages are 1-based
+		perPage: tableParams.rowsPerPage,
+		search: searchQuery || '', // Передаем searchQuery
+		sortBy: tableParams.sortBy,
+		sortDirection: tableParams.sortDirection,
+		gender: gender || '', // Добавляем пол
+		filters: JSON.stringify(filters) // Сериализуем фильтры в JSON-строку
 	})
+
 	console.log(response)
 	return response
 }
+
 export const useModel = id => {
 	return useQuery({
 		queryKey: ['model', id],

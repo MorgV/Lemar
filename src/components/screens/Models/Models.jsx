@@ -15,10 +15,12 @@ function Models() {
 		page: 0,
 		rowsPerPage: 8,
 		sortBy: 'id',
-		sortDirection: 'asc'
+		sortDirection: 'asc',
+		search: '' // Параметр для поиска
 	})
 
-	const [gender, setGender] = useState('')
+	const [searchQuery, setSearchQuery] = useState('')
+	const [gender, setGender] = useState('male')
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 	const [filters, setFilters] = useState({
 		height: [],
@@ -26,9 +28,19 @@ function Models() {
 		age: []
 	})
 
-	const heightOptions = ['160', '170', '180', '190']
-	const shoeSizeOptions = ['35', '36', '37', '38', '39']
-	const ageOptions = ['10-15', '16-20', '21-25']
+	const heightOptions = [
+		'92-110',
+		'110-120',
+		'120-130',
+		'130-140',
+		'140 - 150',
+		'150 - 160',
+		'160 - 170',
+		'170 - 180'
+	]
+
+	const shoeSizeOptions = ['25-30', '31-35', '36-40', '41-45']
+	const ageOptions = ['3-6', '7-10', '11-15']
 
 	const filterLabels = {
 		height: 'Рост',
@@ -53,12 +65,12 @@ function Models() {
 	const handleFilterChange = (filterType, value, isChecked) => {
 		setFilters(prevFilters => {
 			const newFilterValues = isChecked
-				? [...prevFilters[filterType], value]
-				: prevFilters[filterType].filter(item => item !== value)
+				? [...prevFilters[filterType], value] // Добавляем новый диапазон
+				: prevFilters[filterType].filter(item => item !== value) // Удаляем диапазон
 
 			return {
 				...prevFilters,
-				[filterType]: newFilterValues
+				[filterType]: newFilterValues // Обновляем массив для конкретного фильтра
 			}
 		})
 	}
@@ -66,11 +78,17 @@ function Models() {
 	const handleDeleteChip = (filterType, value) => {
 		handleFilterChange(filterType, value, false)
 	}
-
 	const { data, error, isLoading, isError, isFetching } = useQuery(
 		modelsClient.getModelsSummaryInfiniteQueryOptions(
-			{ tableParams },
-			{ searchQuery: '' }
+			{
+				tableParams: {
+					...tableParams, // Оставляем остальные параметры нетронутыми
+					search: searchQuery // Передаем searchQuery
+				},
+				gender: gender || '',
+				filters: filters
+			},
+			{ searchQuery } // Передаем searchQuery также здесь для синхронизации
 		)
 	)
 
@@ -84,7 +102,10 @@ function Models() {
 	return (
 		<Layout screen={'models'}>
 			<main className={styles.main}>
-				<SearchInput />
+				<SearchInput
+					searchQuery={searchQuery}
+					setSearchQuery={setSearchQuery}
+				/>
 
 				<Stack
 					direction={{ xs: 'column', sm: 'row' }} // Вертикально для маленьких экранов
