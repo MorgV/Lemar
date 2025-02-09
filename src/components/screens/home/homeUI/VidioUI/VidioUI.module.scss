@@ -7,6 +7,9 @@
 	@media (max-width: '970px') {
 		margin: 0 auto 120px auto;
 	}
+	@media (max-width: '470px') {
+		margin: 0 auto 30px auto;
+	}
 	&::before {
 		content: '';
 		position: absolute;
@@ -70,7 +73,6 @@
 		}
 	}
 	@media (max-width: 1000px) {
-		text-align: center;
 		h2 {
 			font-size: 30px;
 		}
@@ -113,8 +115,10 @@
 		}
 	}
 	@media (max-width: 473px) {
+		text-align: center;
+
 		h2 {
-			font-size: 20px;
+			font-size: 22px;
 		}
 		h1 {
 			font-size: 100px;

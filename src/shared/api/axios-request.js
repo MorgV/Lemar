@@ -42,7 +42,7 @@ export const modelsClient = {
 		return postData(`/models/${id}`, data) // Используем postData
 	},
 	getModelsSummaryInfiniteQueryOptions: (
-		{ tableParams = {}, gender = '1', filters = {} },
+		{ tableParams = {}, gender = '', filters = {} },
 		{ searchQuery = '' } = {} // Убедитесь, что передаете searchQuery правильно
 	) => {
 		console.log(tableParams, gender, filters, searchQuery)

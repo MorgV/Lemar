@@ -3,7 +3,7 @@ import styles from './CardList.module.scss'
 import Card from '../Card/Card'
 import { useEffect, useState } from 'react'
 
-const CardList = ({ data, onLoadMore, isFetching }) => {
+const CardList = ({ data, onLoadMore, isFetching, total }) => {
 	const [dataLength, setDataLength] = useState(0) // Состояние для хранения длины данных
 	console.log(data)
 	useEffect(() => {
@@ -28,7 +28,7 @@ const CardList = ({ data, onLoadMore, isFetching }) => {
 					: 'Models undefined'}
 			</div>
 
-			{data?.length > 0 && (
+			{data?.length > 0 && total - data?.length != 0 && (
 				<div
 					style={{ width: '100%', textAlign: 'center', marginBottom: '20px' }}
 				>

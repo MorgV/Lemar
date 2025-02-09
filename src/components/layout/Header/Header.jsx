@@ -1,30 +1,39 @@
 import { useState } from 'react'
 import './Header.scss'
+import useScrollTo from '../../../shared/hooks/useScrollTo'
 
 const Header = ({ rr }) => {
-	let [burgerState, setBurgerState] = useState(false)
-	if (rr === undefined) {
-		window.addEventListener(
-			'scroll',
-			() => {
-				const scrollPos = window.scrollY
-				const headerObg = document.getElementById('header')
+	const [burgerState, setBurgerState] = useState(false)
 
-				if (scrollPos >= 350 && rr === false) {
-					headerObg.classList.add('header_fixed')
-				} else {
-					headerObg.classList.remove('header_fixed')
-				}
-			}
+	// Хуки для плавного скроллинга
+	const ToModals = useScrollTo('Modals')
 
-			//className clsn
-		)
-	}
+	const ToSignUp = useScrollTo('SignUp')
+	const ToOnas = useScrollTo('Onas')
+	const ToEmployees = useScrollTo('Employees')
+	const ToPartners = useScrollTo('Partners')
+	const ToServices = useScrollTo('Services')
 
+	// Обработчик для мобильного меню
 	const heandlerSwapBurger = () => {
 		document.body.style.overflow = burgerState ? '' : 'hidden'
 		setBurgerState(!burgerState)
 	}
+
+	// Скролл, когда страница прокручена вниз
+	if (rr === undefined) {
+		window.addEventListener('scroll', () => {
+			const scrollPos = window.scrollY
+			const headerObg = document.getElementById('header')
+
+			if (scrollPos >= 350 && rr === false) {
+				headerObg.classList.add('header_fixed')
+			} else {
+				headerObg.classList.remove('header_fixed')
+			}
+		})
+	}
+
 	return (
 		<header id='header' className='header'>
 			<div className='container'>
@@ -43,32 +52,68 @@ const Header = ({ rr }) => {
 					<nav className={burgerState ? 'header__menu active' : 'header__menu'}>
 						<ul className='header__list'>
 							<li>
-								<a href='/models' className='header__link'>
+								<a
+									onClick={e => {
+										e.preventDefault()
+										ToModals()
+									}}
+									className='header__link'
+								>
 									База моделей
 								</a>
 							</li>
 							<li>
-								<a href='/' className='header__link'>
+								<a
+									onClick={e => {
+										e.preventDefault()
+										ToSignUp()
+									}}
+									className='header__link'
+								>
 									Записаться
 								</a>
 							</li>
 							<li>
-								<a href='' className='header__link'>
+								<a
+									onClick={e => {
+										e.preventDefault()
+										ToOnas()
+									}}
+									className='header__link'
+								>
 									О нас
 								</a>
 							</li>
 							<li>
-								<a href='' className='header__link'>
+								<a
+									onClick={e => {
+										e.preventDefault()
+										ToEmployees()
+									}}
+									className='header__link'
+								>
 									Преподаватели
 								</a>
 							</li>
 							<li>
-								<a href='' className='header__link'>
+								<a
+									onClick={e => {
+										e.preventDefault()
+										ToPartners()
+									}}
+									className='header__link'
+								>
 									Партнерам
 								</a>
 							</li>
 							<li>
-								<a href='' className='header__link'>
+								<a
+									onClick={e => {
+										e.preventDefault()
+										ToServices()
+									}}
+									className='header__link'
+								>
 									Наши услуги
 								</a>
 							</li>

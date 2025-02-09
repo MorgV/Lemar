@@ -1,0 +1,69 @@
+@import 'src/assets/styles/variables';
+
+.titleSubtitleContainer {
+	text-align: center;
+	user-select: none;
+}
+
+.servicesTitle {
+	font-size: 6rem;
+	font-weight: 500;
+	color: $white;
+	font-family: $special-font;
+	opacity: 0;
+	transform: translateY(30px);
+	transition: opacity 0.5s ease, transform 0.5s ease;
+
+	&.visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.servicesSubtitle {
+	font-size: 2rem;
+	color: $white;
+	font-family: $special-font;
+	margin-bottom: 50px;
+	opacity: 0;
+	transform: translateY(30px);
+	transition: opacity 0.5s ease, transform 0.5s ease;
+
+	&.visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Адаптивность */
+@media (max-width: 1000px) {
+	.servicesTitle {
+		font-size: 5rem;
+	}
+
+	.servicesSubtitle {
+		font-size: 1.8rem;
+	}
+}
+
+@media (max-width: 700px) {
+	.servicesTitle {
+		font-size: 4rem;
+	}
+
+	.servicesSubtitle {
+		font-size: 1.5rem;
+		margin-bottom: 30px;
+	}
+}
+
+@media (max-width: 500px) {
+	.servicesTitle {
+		font-size: 2rem;
+	}
+
+	.servicesSubtitle {
+		font-size: 1rem;
+		margin-bottom: 20px;
+	}
+}

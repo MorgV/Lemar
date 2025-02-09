@@ -101,7 +101,6 @@ function Models() {
 			{ searchQuery } // Передаем searchQuery также здесь для синхронизации
 		)
 	)
-
 	const loadMore = () => {
 		setTableParams(prev => ({
 			...prev,
@@ -236,6 +235,7 @@ function Models() {
 					) : (
 						<CardList
 							data={data?.models}
+							total={data?.total}
 							onLoadMore={loadMore}
 							isFetching={isFetching}
 						/>

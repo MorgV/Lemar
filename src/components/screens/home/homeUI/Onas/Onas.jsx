@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import Layout from '../../../../layout/Layout'
 import styles from './Onas.module.scss'
 import OnasCard from './OnasCard/OnasCard'
 import useIntersectionObserver from '../../../../../shared/hooks/useIntersectionObserver'
@@ -56,7 +55,7 @@ const Onas = () => {
 
 	return (
 		<div className={styles.wrapper}>
-			<div className={styles.wrapper__list}>
+			<div id='Onas' className={styles.wrapper__list}>
 				{cards.map((card, index) => {
 					const isVisible = visibilityStates[index]
 					return (

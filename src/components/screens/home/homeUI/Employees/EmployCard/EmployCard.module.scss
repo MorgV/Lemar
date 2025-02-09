@@ -1,0 +1,48 @@
+@import 'src/assets/styles/variables';
+.employCard {
+	width: 200px;
+	min-height: 355px;
+	margin: 10px;
+	transition: transform 0.3s ease-in-out;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	text-align: center;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	padding: 15px;
+
+	h2 {
+		color: $accent;
+		margin-top: 10px;
+		font-size: 18px;
+	}
+
+	h3 {
+		margin-top: 5px;
+		font-size: 16px;
+	}
+
+	/* Добавляем эффект пульсации на изображение при наведении */
+	.employImg {
+		max-width: 100%;
+		transition: transform 0.3s ease-in-out; // плавный переход для пульсации
+		img {
+			cursor: pointer;
+
+			width: 100%;
+			height: auto;
+			border-radius: 10px;
+			&:hover {
+				// box-shadow: 0px 6px 20px rgba(255, 255, 255, 0.3);
+			}
+		}
+
+		/* Эффект при наведении */
+		&:hover {
+			transform: scale(1.1); /* Увеличиваем изображение */
+		}
+	}
+}

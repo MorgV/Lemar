@@ -1,33 +1,59 @@
 @import 'src/assets/styles/variables';
-$accent-04: rgba($accent, 0.4);
 
-.wrapper {
+.buttonWrapper {
+	margin-top: 30px;
+}
+
+.button {
+	display: inline-block;
+	text-decoration: none;
+	cursor: pointer;
+	background-color: $accent-blue;
+	padding: 15px 80px;
+	font-size: 20px;
+	color: $white;
+	border-radius: 40px;
+	border: none;
+	transition: all 0.3s ease;
+	animation: pulse 1.5s infinite; /* Добавляем анимацию пульсации */
+
+	&:hover {
+		background-color: $accent;
+	}
+
+	@media (max-width: 1000px) {
+		padding: 10px 70px;
+		font-size: 17px;
+		border-radius: 40px;
+	}
+
+	@media (max-width: $mobile) {
+		padding: 10px 50px;
+		font-size: 18px;
+	}
+
+	@media (max-width: 473px) {
+		padding: 10px 30px;
+		font-size: 16px;
+	}
+}
+.buttonWrapper {
+	display: inline-block;
 	text-align: center;
-	button {
-		border: none;
-		outline: none;
-		font-size: 20px;
-		border-radius: 10px;
-		padding: 13px 48px;
-		transition: background-color 0.15s ease;
-		background-color: $accent-04;
-		cursor: pointer;
-		color: #fff;
+}
 
-		@media (max-width: $mobile) {
-			font-size: 16px;
-			padding: 12px 38px;
-		}
-		&:hover {
-			background-color: rgba($accent, 0.7);
-		}
-
-		&.main {
-			background-color: rgba(255, 255, 255, 0.25);
-
-			&:hover {
-				background-color: $accent-04;
-			}
-		}
+/* Анимация пульсации */
+@keyframes pulse {
+	0% {
+		transform: scale(1);
+		opacity: 1;
+	}
+	50% {
+		transform: scale(1.05); /* Немного увеличиваем размер */
+		opacity: 0.9; /* Немного уменьшаем непрозрачность */
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
 	}
 }

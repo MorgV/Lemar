@@ -1,17 +1,13 @@
-import styles from './button.module.scss'
-import cn from 'clsx'
+import styles from './Button.module.scss'
 
-const Button = ({ children, clickHandler, size = 'xl' }) => {
+const RequestButton = ({ link, text, onClick }) => {
 	return (
-		<div className={styles.wrapper}>
-			<button
-				className={cn(styles.button, styles[size])}
-				onClick={clickHandler}
-			>
-				{children}
-			</button>
+		<div className={styles.buttonWrapper}>
+			<a onClick={onClick} href={link} className={styles.button}>
+				{text}
+			</a>
 		</div>
 	)
 }
 
-export default Button
+export default RequestButton
