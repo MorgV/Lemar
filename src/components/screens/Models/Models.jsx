@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { modelsClient } from '../../../shared/api/axios-request'
 import Layout from '../../layout/Layout'
@@ -7,10 +7,12 @@ import CardList from './ModelsUI/CardList/CardList'
 import SearchInput from '../Admin/AdminUI/SearchInput/SearchInput'
 import { Button, Stack, Chip } from '@mui/material'
 import FilterDrawer from './ModelsUI/FilterDrawer/FilterDrawer'
+import { useParams } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 
 function Models() {
 	console.log('render models')
-
+	const { category } = useParams() // category = 'boys' или 'girls'
 	const [tableParams, setTableParams] = useState({
 		page: 0,
 		rowsPerPage: 8,
@@ -18,9 +20,13 @@ function Models() {
 		sortDirection: 'asc',
 		search: '' // Параметр для поиска
 	})
+	useEffect(() => {
+		setGender(category)
+		console.log(category)
+	}, [category])
 
 	const [searchQuery, setSearchQuery] = useState('')
-	const [gender, setGender] = useState('male')
+	const [gender, setGender] = useState()
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 	const [filters, setFilters] = useState({
 		height: [],
@@ -109,51 +115,35 @@ function Models() {
 	}
 
 	return (
-		<Layout screen={'models'}>
-			<main className={styles.main}>
-				<SearchInput
-					searchQuery={searchQuery}
-					setSearchQuery={setSearchQuery}
-					onChange={handleSearchChange} // Передаем функцию для изменения searchQuery
+		<>
+			<Helmet>
+				<title>Lemar-models</title>
+				<meta
+					name='description'
+					content='LEMAR,модели кастинги, фотосессии, обучение для моделей. Запишитесь на пробный урок и станьте профессиональной моделью! Школа моды Владимир. lemar-models, модели во Владимире'
 				/>
-
-				<Stack
-					direction={{ xs: 'column', sm: 'row' }} // Вертикально для маленьких экранов
-					spacing={2}
-					marginY={2}
-					alignItems='center'
-					justifyContent={{ xs: 'center', sm: 'space-between' }} // Центрирование на мобилках
-					width='100%'
-				>
-					<Button
-						variant='contained'
-						sx={{
-							color: '#fff',
-							backgroundColor: gender !== 'female' ? '#01959f' : '#d95a8c',
-							width: { xs: '100%', sm: 'auto' }, // 100% ширины на мобильных
-							'&:hover': {
-								backgroundColor: '#01b2bf',
-								color: '#fff',
-								transform: 'scale(1.05)',
-								transition: 'all 0.3s ease'
-							}
-						}}
-						onClick={toggleDrawer(true)}
-					>
-						Фильтрация
-					</Button>
+			</Helmet>
+			<Layout screen={'models'}>
+				<main className={styles.main}>
+					<SearchInput
+						searchQuery={searchQuery}
+						setSearchQuery={setSearchQuery}
+						onChange={handleSearchChange} // Передаем функцию для изменения searchQuery
+					/>
 
 					<Stack
-						direction={{ xs: 'column', sm: 'row' }} // Кнопки вертикально на мобилках
+						direction={{ xs: 'column', sm: 'row' }} // Вертикально для маленьких экранов
 						spacing={2}
-						width={{ xs: '100%', sm: 'auto' }}
+						marginY={2}
+						alignItems='center'
+						justifyContent={{ xs: 'center', sm: 'space-between' }} // Центрирование на мобилках
+						width='100%'
 					>
 						<Button
-							variant={gender === 'male' ? 'contained' : 'outlined'}
+							variant='contained'
 							sx={{
 								color: '#fff',
-								bgcolor: gender === 'male' ? '#01959f' : 'transparent',
-								borderColor: '#01959f',
+								backgroundColor: gender !== 'female' ? '#01959f' : '#d95a8c',
 								width: { xs: '100%', sm: 'auto' }, // 100% ширины на мобильных
 								'&:hover': {
 									backgroundColor: '#01b2bf',
@@ -162,87 +152,113 @@ function Models() {
 									transition: 'all 0.3s ease'
 								}
 							}}
-							onClick={() => handleGenderChange('male')}
+							onClick={toggleDrawer(true)}
 						>
-							Мальчики
+							Фильтрация
 						</Button>
 
-						<Button
-							variant={gender === 'female' ? 'contained' : 'outlined'}
-							sx={{
-								color: '#fff',
-								bgcolor: gender === 'female' ? '#d95a8c' : 'transparent',
-								borderColor: '#d95a8c',
-								width: { xs: '100%', sm: 'auto' }, // 100% ширины на мобильных
-								'&:hover': {
-									backgroundColor: '#e57399',
-									color: '#fff',
-									transform: 'scale(1.05)',
-									transition: 'all 0.3s ease'
-								}
-							}}
-							onClick={() => handleGenderChange('female')}
+						<Stack
+							direction={{ xs: 'column', sm: 'row' }} // Кнопки вертикально на мобилках
+							spacing={2}
+							width={{ xs: '100%', sm: 'auto' }}
 						>
-							Девочки
-						</Button>
-					</Stack>
-				</Stack>
-
-				<Stack
-					direction='row'
-					flexWrap='wrap'
-					margin={'10px 0 20px 0'}
-					gap={'10px'}
-				>
-					{Object.entries(filters).map(([filterType, values]) =>
-						values.map(value => (
-							<Chip
-								key={`${filterType}-${value}`} // Исправили эту строку
-								label={`${filterLabels[filterType]}: ${value}`} // Исправили эту строку
-								onDelete={() => handleDeleteChip(filterType, value)}
+							<Button
+								variant={gender === 'male' ? 'contained' : 'outlined'}
 								sx={{
-									backgroundColor: gender !== 'female' ? '#01959f' : '#d95a8c',
 									color: '#fff',
-									'& .MuiChip-deleteIcon': {
+									bgcolor: gender === 'male' ? '#01959f' : 'transparent',
+									borderColor: '#01959f',
+									width: { xs: '100%', sm: 'auto' }, // 100% ширины на мобильных
+									'&:hover': {
+										backgroundColor: '#01b2bf',
 										color: '#fff',
-										'&:hover':
-											gender !== 'female'
-												? { color: '#b53471' }
-												: { color: '#01959f' }
+										transform: 'scale(1.05)',
+										transition: 'all 0.3s ease'
 									}
 								}}
+								onClick={() => handleGenderChange('male')}
+							>
+								Мальчики
+							</Button>
+
+							<Button
+								variant={gender === 'female' ? 'contained' : 'outlined'}
+								sx={{
+									color: '#fff',
+									bgcolor: gender === 'female' ? '#d95a8c' : 'transparent',
+									borderColor: '#d95a8c',
+									width: { xs: '100%', sm: 'auto' }, // 100% ширины на мобильных
+									'&:hover': {
+										backgroundColor: '#e57399',
+										color: '#fff',
+										transform: 'scale(1.05)',
+										transition: 'all 0.3s ease'
+									}
+								}}
+								onClick={() => handleGenderChange('female')}
+							>
+								Девочки
+							</Button>
+						</Stack>
+					</Stack>
+
+					<Stack
+						direction='row'
+						flexWrap='wrap'
+						margin={'10px 0 20px 0'}
+						gap={'10px'}
+					>
+						{Object.entries(filters).map(([filterType, values]) =>
+							values.map(value => (
+								<Chip
+									key={`${filterType}-${value}`} // Исправили эту строку
+									label={`${filterLabels[filterType]}: ${value}`} // Исправили эту строку
+									onDelete={() => handleDeleteChip(filterType, value)}
+									sx={{
+										backgroundColor:
+											gender !== 'female' ? '#01959f' : '#d95a8c',
+										color: '#fff',
+										'& .MuiChip-deleteIcon': {
+											color: '#fff',
+											'&:hover':
+												gender !== 'female'
+													? { color: '#b53471' }
+													: { color: '#01959f' }
+										}
+									}}
+								/>
+							))
+						)}
+					</Stack>
+
+					<FilterDrawer
+						isOpen={isDrawerOpen}
+						onClose={toggleDrawer(false)}
+						heightOptions={heightOptions}
+						shoeSizeOptions={shoeSizeOptions}
+						ageOptions={ageOptions}
+						onFilterChange={handleFilterChange}
+						filters={filters}
+						gender={gender}
+					/>
+
+					<div className='container'>
+						{isLoading ? (
+							<div>Loading...</div>
+						) : isError ? (
+							<div>Error: {error.message}</div>
+						) : (
+							<CardList
+								data={data?.models}
+								total={data?.total}
+								onLoadMore={loadMore}
+								isFetching={isFetching}
 							/>
-						))
-					)}
-				</Stack>
-
-				<FilterDrawer
-					isOpen={isDrawerOpen}
-					onClose={toggleDrawer(false)}
-					heightOptions={heightOptions}
-					shoeSizeOptions={shoeSizeOptions}
-					ageOptions={ageOptions}
-					onFilterChange={handleFilterChange}
-					filters={filters}
-					gender={gender}
-				/>
-
-				<div className='container'>
-					{isLoading ? (
-						<div>Loading...</div>
-					) : isError ? (
-						<div>Error: {error.message}</div>
-					) : (
-						<CardList
-							data={data?.models}
-							total={data?.total}
-							onLoadMore={loadMore}
-							isFetching={isFetching}
-						/>
-					)}
-				</div>
-			</main>
-		</Layout>
+						)}
+					</div>
+				</main>
+			</Layout>
+		</>
 	)
 }
 

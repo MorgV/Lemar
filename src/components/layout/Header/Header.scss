@@ -74,10 +74,12 @@ header {
 	color: $white;
 	text-decoration: none;
 	transition: all 0.3s ease 0s;
+	cursor: pointer; /* Add this line to change the cursor to a pointer */
 	&:hover {
 		color: $accent-blue;
 	}
 }
+
 .hamburger {
 	display: none;
 }

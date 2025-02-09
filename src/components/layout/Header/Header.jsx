@@ -7,7 +7,6 @@ const Header = ({ rr }) => {
 
 	// Хуки для плавного скроллинга
 	const ToModals = useScrollTo('Modals')
-
 	const ToSignUp = useScrollTo('SignUp')
 	const ToOnas = useScrollTo('Onas')
 	const ToEmployees = useScrollTo('Employees')
@@ -18,6 +17,14 @@ const Header = ({ rr }) => {
 	const heandlerSwapBurger = () => {
 		document.body.style.overflow = burgerState ? '' : 'hidden'
 		setBurgerState(!burgerState)
+	}
+
+	// Функция для закрытия меню при клике на ссылку
+	const closeBurgerMenu = () => {
+		if (burgerState) {
+			setBurgerState(false) // Закрыть меню
+			document.body.style.overflow = '' // Восстановить прокрутку
+		}
 	}
 
 	// Скролл, когда страница прокручена вниз
@@ -56,6 +63,7 @@ const Header = ({ rr }) => {
 									onClick={e => {
 										e.preventDefault()
 										ToModals()
+										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
@@ -67,6 +75,7 @@ const Header = ({ rr }) => {
 									onClick={e => {
 										e.preventDefault()
 										ToSignUp()
+										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
@@ -78,6 +87,7 @@ const Header = ({ rr }) => {
 									onClick={e => {
 										e.preventDefault()
 										ToOnas()
+										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
@@ -89,6 +99,7 @@ const Header = ({ rr }) => {
 									onClick={e => {
 										e.preventDefault()
 										ToEmployees()
+										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
@@ -100,6 +111,7 @@ const Header = ({ rr }) => {
 									onClick={e => {
 										e.preventDefault()
 										ToPartners()
+										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
@@ -111,6 +123,7 @@ const Header = ({ rr }) => {
 									onClick={e => {
 										e.preventDefault()
 										ToServices()
+										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>

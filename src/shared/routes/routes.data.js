@@ -1,5 +1,5 @@
-import Home from '../../components/screens/Home/Home'
-import Models from '../../components/screens/Models/Models'
+import Home from '../../components/screens/Home/Home.jsx'
+import Models from '../../components/screens/Models/Models.jsx'
 import Auth from '../../components/screens/Auth/Auth.jsx'
 import Admin from '../../components/screens/Admin/Admin.jsx'
 import Model from '../../components/screens/Model/Model.jsx'
@@ -8,7 +8,7 @@ import {
 	MODELS_ROUTE,
 	AUTH_ROUTE,
 	ADMIN_ROUTE
-} from '../../utils/constans'
+} from '../../utils/constans.js'
 
 export const routes = [
 	{
@@ -18,6 +18,11 @@ export const routes = [
 	},
 	{
 		path: MODELS_ROUTE,
+		component: Models,
+		isAuth: false
+	},
+	{
+		path: `${MODELS_ROUTE}/:category`,
 		component: Models,
 		isAuth: false
 	},

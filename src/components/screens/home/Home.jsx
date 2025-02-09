@@ -8,10 +8,8 @@ import Employees from './homeUI/Employees/Employees'
 import DetailedInformation from './homeUI/DetailedInformation/DetailedInformation'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-
+import { Helmet } from 'react-helmet-async'
 function Home() {
-	// const { isAuth } = useAuth()
-	// const navigate = useNavigate()
 	const location = useLocation()
 
 	useEffect(() => {
@@ -22,15 +20,25 @@ function Home() {
 			}
 		}
 	}, [location])
+
 	return (
-		<Layout>
-			<VidioUI />
-			<Onas />
-			<ServicesNew />
-			<ModelsVS />
-			<DetailedInformation />
-			<Employees />
-		</Layout>
+		<>
+			<Helmet>
+				<title>Lemar-models</title>
+				<meta
+					name='description'
+					content='Модельное агентство LEMAR: кастинги, фотосессии, обучение для моделей. Запишитесь на пробный урок и станьте профессиональной моделью! Школа моды Владимир. lemar-models'
+				/>
+			</Helmet>
+			<Layout>
+				<VidioUI />
+				<Onas />
+				<ServicesNew />
+				<ModelsVS />
+				<DetailedInformation />
+				<Employees />
+			</Layout>
+		</>
 	)
 }
 

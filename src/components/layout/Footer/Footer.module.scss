@@ -77,6 +77,7 @@
 	color: #ccc;
 	text-decoration: none;
 	transition: color 0.3s;
+	cursor: pointer; /* Добавляем pointer курсор */
 }
 
 .contacts a:hover,
@@ -123,7 +124,7 @@
 	}
 }
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
 	.footer {
 		margin-top: 80px;
 

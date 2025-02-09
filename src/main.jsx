@@ -7,17 +7,19 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 import { queryClient } from './shared/api/query-client'
 
-import CssBaseline from '@mui/material/CssBaseline'
+import { HelmetProvider } from 'react-helmet-async'
 import { ThemeProvider } from '@mui/material/styles'
 import theme from './utils/them'
 
 createRoot(document.getElementById('root')).render(
-	<StrictMode>
-		<QueryClientProvider client={queryClient}>
-			<ThemeProvider theme={theme}>
-				<Router />
-				<ReactQueryDevtools />
-			</ThemeProvider>
-		</QueryClientProvider>
-	</StrictMode>
+	<HelmetProvider>
+		<StrictMode>
+			<QueryClientProvider client={queryClient}>
+				<ThemeProvider theme={theme}>
+					<Router />
+					<ReactQueryDevtools />
+				</ThemeProvider>
+			</QueryClientProvider>
+		</StrictMode>
+	</HelmetProvider>
 )
