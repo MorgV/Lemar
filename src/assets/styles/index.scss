@@ -5,11 +5,6 @@ button {
 	-webkit-tap-highlight-color: transparent;
 	outline: none;
 	box-shadow: none;
-	// &:focus,
-	// &:active {
-	// 	outline: none;
-	// 	box-shadow: none;
-	// }
 }
 body {
 	background-color: $white;
@@ -115,8 +110,8 @@ img {
 * {
 	/* Включаем стили для прокрутки в Webkit-браузерах (Chrome, Safari, Edge) */
 	::-webkit-scrollbar {
-		width: 6px; /* Толщина вертикального скроллбара */
-		height: 6px; /* Толщина горизонтального скроллбара */
+		width: 15px; /* Толщина вертикального скроллбара */
+		height: 15px; /* Толщина горизонтального скроллбара */
 	}
 
 	/* Настроим внешний вид "ползунка" прокрутки */

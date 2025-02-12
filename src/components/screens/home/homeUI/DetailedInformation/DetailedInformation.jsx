@@ -1,16 +1,16 @@
 import TitleSubtitle from '../../../../UI/TitleSubtitle/TitleSubtitle'
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import './DetailedInformation.scss'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/navigation'
-import { FaArrowRight, FaArrowLeft } from 'react-icons/fa' // Import left arrow icon
+import { FaArrowRight, FaArrowLeft } from 'react-icons/fa'
 import Button from '../../../../UI/Button/Button'
 import useWhatsApp from '../../../../../shared/hooks/useWhatsApp'
 
 const DetailedInformation = () => {
-	const swiperRef = useRef(null) // Reference to Swiper for slide control
+	const swiperRef = useRef(null)
 	const openWhatsApp = useWhatsApp({
 		message:
 			'Добрый день! Меня заинтересовала услуга: Детские модели для коммерческих съемок'
@@ -24,38 +24,34 @@ const DetailedInformation = () => {
 		'С нами вы получите надежных и профессиональных партнеров для реализации ваших идей. Свяжитесь с нами, чтобы обсудить детали и получить доступ к нашим талантливым детям моделям!'
 	]
 
-	// Function to go to the next slide
 	const handleNextSlide = () => {
 		if (swiperRef.current) {
-			swiperRef.current.swiper.slideNext() // Go to next slide
+			swiperRef.current.swiper.slideNext()
 		}
 	}
 
-	// Function to go to the previous slide
 	const handlePrevSlide = () => {
 		if (swiperRef.current) {
-			swiperRef.current.swiper.slidePrev() // Go to previous slide
+			swiperRef.current.swiper.slidePrev()
 		}
 	}
 
 	return (
 		<div id='Partners' className='wrapper'>
 			<TitleSubtitle titleText='Партнерам' className='titleOverlay' />
-
 			<div className='containerDetailedInformation'>
-				<h2 className='titleService'>
-					Услуга: Детские модели для коммерческих съемок
-				</h2>
 				<video autoPlay loop muted className='backgroundVideo'>
 					<source src='/video/vidio.mp4' type='video/mp4' />
 				</video>
+
 				<div className='contentOverlay'>
+					<h2 className='titleService'>Дети модели для коммерческих съемок</h2>
 					<Swiper
 						className='textSlider'
 						modules={[Navigation]}
 						navigation={{ nextEl: '.custom-next', prevEl: '.custom-prev' }}
 						loop
-						ref={swiperRef} // Reference to Swiper for control
+						ref={swiperRef}
 					>
 						{slides.map((slide, index) => (
 							<SwiperSlide key={index} className='slide'>
@@ -63,13 +59,17 @@ const DetailedInformation = () => {
 							</SwiperSlide>
 						))}
 					</Swiper>
-					<button className='custom-prev' onClick={handlePrevSlide}>
-						<FaArrowLeft className='prev' />
-					</button>
-					<Button text='Оставить заявку' onClick={openWhatsApp} />
-					<button className='custom-next' onClick={handleNextSlide}>
-						<FaArrowRight className='next' />
-					</button>
+					<div className='nav-panel'>
+						<button className='custom-prev' onClick={handlePrevSlide}>
+							<FaArrowLeft className='prev' />
+						</button>
+						<div>
+							<Button text='Оставить заявку' onClick={openWhatsApp} />
+						</div>
+						<button className='custom-next' onClick={handleNextSlide}>
+							<FaArrowRight className='next' />
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>

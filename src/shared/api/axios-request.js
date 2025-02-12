@@ -153,7 +153,9 @@ export const useModel = id => {
 }
 const getModelById = async id => {
 	try {
-		const { data } = await axios.get(`http://lemar-models.ru:5000/models/${id}`)
+		const { data } = await axios.get(
+			`https://lemar-models.ru:5000/models/${id}`
+		)
 		console.log('Данные получены:', data)
 		return data // Возвращаем данные здесь
 	} catch (error) {

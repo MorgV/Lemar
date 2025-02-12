@@ -15,19 +15,22 @@
 	width: 100%;
 	height: 100vh;
 	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .titleService {
-	position: absolute;
-	top: 20px;
-	left: 20px;
+	top: 0;
+	left: 0;
+	width: 100%;
 	z-index: 2;
 	color: white;
-	font-size: 1.8rem;
+	font-size: 2.1rem;
 	font-weight: bold;
-	background: rgba(0, 0, 0, 0.5);
-	padding: 10px 20px;
-	border-radius: 5px;
+	font-family: $default-font;
+	padding: 15px 0;
+	text-align: center;
 }
 
 .titleOverlay {
@@ -55,16 +58,18 @@
 }
 
 .contentOverlay {
-	position: absolute;
-	bottom: 20px;
-	right: 20px;
 	width: 45%;
 	background: rgba(0, 0, 0, 0.5);
 	padding: 20px;
 	border-radius: 10px;
 	backdrop-filter: blur(5px);
 	color: white;
-	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: auto;
+	gap: 20px;
+	margin: 0 auto;
 }
 
 .textSlider {
@@ -76,31 +81,18 @@
 	font-size: 1.4rem;
 }
 
-/* Стили для стрелок */
-.custom-next {
-	position: absolute;
-	bottom: 20px; /* Отступ снизу, чтобы стрелка не перекрывала текст */
-	right: 20px;
-	transform: translateX(-50%);
-	background: rgba(255, 255, 255, 0.2);
-	border: none;
-	padding: 10px;
-	border-radius: 50%;
-	cursor: pointer;
-	color: white;
-	font-size: 1.5rem;
+.nav-panel {
 	display: flex;
-	justify-content: center;
+	justify-content: space-between;
 	align-items: center;
-	animation: pulse 1.5s infinite;
-	z-index: 3; /* Стрелка выше других элементов */
+
+	gap: 10px;
+	margin-top: auto;
+	flex-wrap: nowrap;
 }
 
+.custom-next,
 .custom-prev {
-	position: absolute;
-	bottom: 20px; /* Отступ снизу, чтобы стрелка не перекрывала текст */
-	left: 50px;
-	transform: translateX(-50%);
 	background: rgba(255, 255, 255, 0.2);
 	border: none;
 	padding: 10px;
@@ -112,36 +104,28 @@
 	justify-content: center;
 	align-items: center;
 	animation: pulse 1.5s infinite;
-	z-index: 3; /* Стрелка выше других элементов */
 }
 
 @keyframes pulse {
 	0% {
-		transform: translateX(-50%) scale(1);
+		transform: scale(1);
 	}
 	50% {
-		transform: translateX(-50%) scale(1.2);
+		transform: scale(1.2);
 	}
 	100% {
-		transform: translateX(-50%) scale(1);
+		transform: scale(1);
 	}
 }
 
-/* Адаптация для экранов до 1000px */
 @media screen and (max-width: 1000px) {
 	.titleService {
 		font-size: 1.6rem;
-		padding: 8px 16px;
-	}
-	.titleOverlay {
-		font-size: 1.8rem;
-		padding: 8px 16px;
+		padding: 10px 0;
 	}
 	.contentOverlay {
 		width: 60%;
 		padding: 15px;
-		bottom: 15px;
-		right: 15px;
 	}
 	.custom-next,
 	.custom-prev {
@@ -150,15 +134,10 @@
 	}
 }
 
-/* Адаптация для экранов до 700px */
 @media screen and (max-width: 700px) {
 	.titleService {
 		font-size: 1.4rem;
-		padding: 6px 12px;
-	}
-	.titleOverlay {
-		font-size: 1.6rem;
-		padding: 6px 12px;
+		padding: 8px 0;
 	}
 	.slide {
 		font-size: 1rem;
@@ -166,8 +145,7 @@
 	.contentOverlay {
 		width: 75%;
 		padding: 12px;
-		bottom: 10px;
-		right: 10px;
+		margin: 0 auto;
 	}
 	.custom-next,
 	.custom-prev {
@@ -175,20 +153,25 @@
 		font-size: 1.3rem;
 	}
 }
-
-/* Адаптация для экранов до 500px — выравнивание блоков по центру */
-@media screen and (max-width: 619px) {
-	/* Центрируем заголовки */
-	.titleService,
-	.titleOverlay {
-		font-size: 19px;
-		margin-right: 20px;
+@media screen and (max-width: 400px) {
+	.custom-next,
+	.custom-prev {
+		font-size: 1.7rem;
+		position: absolute;
+		bottom: 20px;
 	}
-	/* Центрируем оверлей с контентом */
-	.contentOverlay {
-		left: 50%;
-		right: auto;
-		transform: translateX(-50%);
-		width: 85%;
+	.custom-next {
+		right: 50px;
+	}
+	.custom-prev {
+		left: 50px;
+	}
+
+	.nav-panel {
+		gap: 6px;
+		justify-content: center;
+		div {
+			margin-bottom: 30px;
+		}
 	}
 }

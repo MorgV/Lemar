@@ -1,7 +1,13 @@
 import styles from './VidioUI.module.scss'
 import RequestButton from '../../../../UI/Button/Button'
+import useWhatsApp from '../../../../../shared/hooks/useWhatsApp'
 
 function VidioUI() {
+	const openWhatsApp = useWhatsApp({
+		message:
+			'Добрый день! Меня заинтересовало обучение в Школе Моды и творчества Lemar'
+	})
+
 	return (
 		<div id='SignUp' className={styles.home}>
 			<video
@@ -16,10 +22,7 @@ function VidioUI() {
 				<h2>Школа Моды и творчества</h2>
 				<h1>Lemar</h1>
 				<h3>Приглашает мальчиков и девочек от 3 до 15 лет на обучение</h3>
-				<RequestButton
-					link='https://taplink.cc/lemar_models'
-					text='Оставить заявку'
-				/>
+				<RequestButton text='Оставить заявку' onClick={openWhatsApp} />
 			</div>
 		</div>
 	)

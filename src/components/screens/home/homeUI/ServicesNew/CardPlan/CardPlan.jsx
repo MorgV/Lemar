@@ -9,6 +9,7 @@ import {
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import RequestButton from '../../../../../UI/Button/Button'
+import useWhatsApp from '../../../../../../shared/hooks/useWhatsApp'
 import styles from './CardPlan.module.scss'
 
 const CardPlan = ({ name, price, description, icon }) => {
@@ -16,6 +17,10 @@ const CardPlan = ({ name, price, description, icon }) => {
 
 	const handleOpen = () => setOpen(true)
 	const handleClose = () => setOpen(false)
+
+	const openWhatsApp = useWhatsApp({
+		message: `Добрый день! Меня заинтересовала услуга: ${name}`
+	})
 
 	return (
 		<>
@@ -26,11 +31,13 @@ const CardPlan = ({ name, price, description, icon }) => {
 					</Box>
 					<h2 className={styles.title}>{name}</h2>
 					<p className={styles.description}>{description}</p>
-					<RequestButton
-						text='Подробнее'
-						className={styles.button}
-						onClick={handleOpen}
-					/>
+					<div style={{ marginTop: '30px' }}>
+						<RequestButton
+							text='Подробнее'
+							className={styles.button}
+							onClick={handleOpen}
+						/>
+					</div>
 				</CardContent>
 			</Card>
 
@@ -39,7 +46,7 @@ const CardPlan = ({ name, price, description, icon }) => {
 				<Box className={styles.modalContent}>
 					{/* Close Button */}
 					<div className={styles.closeButton} onClick={handleClose}>
-						<CloseIcon className={styles.closeButtonButton} />
+						<CloseIcon fontSize='40px' className={styles.closeButtonButton} />
 					</div>
 
 					<Box className={styles.modalIcon}>
@@ -52,11 +59,13 @@ const CardPlan = ({ name, price, description, icon }) => {
 						{description}
 					</Typography>
 					<Typography className={styles.modalPrice}>{price}</Typography>
-					<RequestButton
-						text='Оставить заявку'
-						className={styles.button}
-						link={'/'}
-					/>
+					<div style={{ marginTop: '20px' }}>
+						<RequestButton
+							text='Оставить заявку'
+							className={styles.button}
+							onClick={openWhatsApp}
+						/>
+					</div>
 				</Box>
 			</Modal>
 		</>

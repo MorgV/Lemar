@@ -144,7 +144,6 @@ $gray: #717171;
 	font-size: 1.25rem;
 	font-weight: bold;
 	color: $accent-blue;
-	text-align: center;
 }
 .button {
 	text-align: center;
@@ -160,7 +159,7 @@ $gray: #717171;
 	.modalContent {
 		max-width: 300px; /* Максимальная ширина модалки */
 		.modalDescription {
-			font-size: 0.7rem;
+			// font-size: 0.7rem;
 		}
 	}
 }
@@ -208,7 +207,7 @@ $gray: #717171;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
-		font-size: 1rem;
+		font-size: 2rem;
 		color: $gray;
 		padding: 0 15px;
 		overflow-y: auto; /* Если текст длинный, включается скролл */

@@ -2,9 +2,9 @@ import { useEffect, useState, useRef } from 'react'
 import styles from './Footer.module.scss'
 import { HOME_ROUTE } from '../../../utils/constans'
 import { FaEnvelope, FaVk, FaWhatsapp } from 'react-icons/fa'
-// import useWhatsApp from '../../../shared/hooks/useWhatsApp'
 import useScrollTo from '../../../shared/hooks/useScrollTo'
 import useWhatsApp from '../../../shared/hooks/useWhatsApp'
+
 const LazyMap = () => {
 	const [isMapLoaded, setIsMapLoaded] = useState(false)
 	const mapRef = useRef(null)
@@ -27,29 +27,82 @@ const LazyMap = () => {
 		return () => observer.disconnect()
 	}, [])
 
+	useEffect(() => {
+		if (isMapLoaded) {
+			const script = document.createElement('script')
+			script.src = 'https://api-maps.yandex.ru/2.1/?lang=ru_RU'
+			script.async = true
+			script.onload = () => {
+				ymaps.ready(() => {
+					const map = new ymaps.Map('map', {
+						center: [56.109966, 40.355235],
+						zoom: 17
+					})
+
+					const placemark = new ymaps.Placemark(
+						[56.109966, 40.355235],
+						{},
+						{
+							iconLayout: 'default#image',
+							iconImageHref: '/images/logo.ico',
+							iconImageSize: [32, 32],
+							iconImageOffset: [-15, -42]
+						}
+					)
+
+					// Устанавливаем контент для балуна
+					placemark.properties.set(
+						'balloonContent',
+						'Lemar models<br>Владимир, ул Сперанского д.1'
+					)
+
+					// Настроим стили для балуна
+					placemark.events.add('balloonopen', () => {
+						const balloonContent = document.querySelector(
+							'.ymaps-2-1-79-balloon__content'
+						)
+						if (balloonContent) {
+							balloonContent.classList.add(styles.balloonContent) // Добавляем стили из SCSS
+						}
+
+						const closeButton = document.querySelector(
+							'.ymaps-2-1-79-balloon__close-button'
+						)
+						if (closeButton) {
+							closeButton.classList.add(styles.closeButton) // Добавляем стили из SCSS
+						}
+					})
+
+					// Добавляем обработчики событий для открытия/закрытия балуна
+					placemark.events.add('mouseenter', function () {
+						placemark.balloon.open() // Открытие балуна при наведении
+					})
+					placemark.events.add('mouseleave', function () {
+						placemark.balloon.close() // Закрытие балуна при уходе
+					})
+
+					// Добавляем маркер на карту
+					map.geoObjects.add(placemark)
+				})
+			}
+			document.body.appendChild(script)
+		}
+	}, [isMapLoaded])
+
 	return (
 		<div ref={mapRef} className={styles.mapContainer}>
 			{isMapLoaded ? (
-				<iframe
-					className={styles.map}
-					src='https://yandex.ru/map-widget/v1/?um=constructor%3A4e3f3f6d2781b100013ec1d7b1ffb83c4283fa4fe2f432a73b6c36b1909078be&amp;source=constructor'
-					width='100%'
-					height='300px'
-					frameBorder='0'
-					allowFullScreen
-				></iframe>
+				<div id='map' className={styles.map}></div>
 			) : (
-				<div className={styles.mapPlaceholder}>
-					<img src='/images/map-placeholder.jpg' alt='Карта' />
-					<p>Карта загружается...</p>
-				</div>
+				<p>Карта загружается...</p>
 			)}
 		</div>
 	)
 }
 
 const Footer = () => {
-	const message = 'Здравствуйте, хочу записаться!'
+	const message =
+		'Добрый день! Меня заинтересовало обучение в Школе Моды и творчества Lemar'
 	const openWhatsApp = useWhatsApp({ message })
 
 	const ToSignUp = useScrollTo('SignUp')
@@ -74,7 +127,7 @@ const Footer = () => {
 					</p>
 					<div className={styles.icons}>
 						<a
-							href='mailto:Mariya-legotina@yandex.ru?subject=Вопрос&body=Здравствуйте,'
+							href='mailto:Mariya-legotina@yandex.ru'
 							target='_blank'
 							rel='noopener noreferrer'
 						>
@@ -95,46 +148,11 @@ const Footer = () => {
 				<nav className={styles.navLinks}>
 					<h3>Навигация</h3>
 					<a onClick={ToModals}>База моделей</a>
-					<a
-						onClick={e => {
-							e.preventDefault
-							ToSignUp()
-						}}
-					>
-						Записаться
-					</a>
-					<a
-						onClick={e => {
-							e.preventDefault
-							ToOnas()
-						}}
-					>
-						О нас
-					</a>
-					<a
-						onClick={e => {
-							e.preventDefault
-							ToEmployees()
-						}}
-					>
-						Преподаватели
-					</a>
-					<a
-						onClick={e => {
-							e.preventDefault
-							ToPartners()
-						}}
-					>
-						Партнерам
-					</a>
-					<a
-						onClick={e => {
-							e.preventDefault
-							ToServices()
-						}}
-					>
-						Наши услуги
-					</a>
+					<a onClick={ToSignUp}>Записаться</a>
+					<a onClick={ToOnas}>О нас</a>
+					<a onClick={ToEmployees}>Преподаватели</a>
+					<a onClick={ToPartners}>Партнерам</a>
+					<a onClick={ToServices}>Наши услуги</a>
 				</nav>
 			</div>
 		</footer>
