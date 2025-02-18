@@ -27,7 +27,7 @@ export const routes = [
 		isAuth: false
 	},
 	{
-		path: `${MODELS_ROUTE}:id`,
+		path: `${MODELS_ROUTE}/:category/:id`,
 		component: Model,
 		isAuth: false
 	},

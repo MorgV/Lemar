@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useModel } from '../../../shared/api/axios-request'
 import { Box, Typography, IconButton, Grid, Paper, Button } from '@mui/material'
@@ -6,29 +6,25 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CloseIcon from '@mui/icons-material/Close'
 import ArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import ArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
-ArrowRightIcon
 import { CSSTransition } from 'react-transition-group'
 import './Model.scss'
 import { M_NUMBER } from '../../../utils/constans'
 
 const Model = () => {
-	const { id } = useParams() // Получение id из URL
+	const { id } = useParams()
 	const idModel = useMemo(() => id, [id])
 	const { data } = useModel(idModel)
 	const { model, images } = data || {}
 	const navigate = useNavigate()
 
-	// Состояние для текущего изображения в слайдере
 	const [currentImageIndex, setCurrentImageIndex] = useState(0)
-	// Состояние для управления анимацией
 	const [isVisible, setIsVisible] = useState(false)
+	const nodeRef = useRef(null) // 👈 Создаём ref
 
-	// Включение анимации при загрузке
 	useEffect(() => {
 		setIsVisible(true)
 	}, [])
 
-	// Функции для переключения слайдов
 	const handlePrevSlide = () => {
 		setCurrentImageIndex(prev => (prev === 0 ? images.length - 1 : prev - 1))
 	}
@@ -37,39 +33,37 @@ const Model = () => {
 		setCurrentImageIndex(prev => (prev === images.length - 1 ? 0 : prev + 1))
 	}
 
-	// Функция для закрытия анимации
 	const handleClose = () => setIsVisible(false)
 
 	const handleClick = () => {
-		const phoneNumber = M_NUMBER // Номер телефона в международном формате
-		const message = `Здравствуйте, я хочу выбрать модель! Меня интересует ${model.FI} рост ${model.height}` // Ваше сообщение
+		const phoneNumber = M_NUMBER
+		const message = `Здравствуйте, я хочу выбрать модель! Меня интересует ${model.FI} рост ${model.height}`
 		const isMobile =
 			/Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
 				navigator.userAgent
 			)
 
-		// URL для WhatsApp Web или мобильной версии
 		const whatsappUrl = isMobile
 			? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
 			: `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(
 					message
 			  )}`
 
-		// Открытие WhatsApp
 		window.open(whatsappUrl, '_blank')
 	}
+
 	return (
 		<CSSTransition
 			in={isVisible}
-			timeout={300} // Время анимации
+			timeout={300}
 			classNames='fade'
 			unmountOnExit
-			onExited={() => {
-				// После завершения анимации закрытия перенаправляем
-				navigate('/models')
-			}}
+			onExited={() => navigate(-1)}
+			nodeRef={nodeRef} // 👈 Передаём ref в CSSTransition
 		>
-			<Grid container className='model-container'>
+			<Grid ref={nodeRef} container className='model-container'>
+				{' '}
+				{/* 👈 Добавили ref в Grid */}
 				{/* Верхняя часть */}
 				<Grid item xs={12} className='model-header'>
 					<Box className='header-left'>
@@ -96,12 +90,10 @@ const Model = () => {
 						</IconButton>
 					</Box>
 				</Grid>
-
 				{/* Центральная часть с слайдером */}
 				<Grid item xs={12} className='model-slider'>
 					{images?.length > 0 && (
 						<Box className='slider-container'>
-							{/* Стрелка влево */}
 							<IconButton className='arrow-button' onClick={handlePrevSlide}>
 								<ArrowLeftIcon
 									sx={{
@@ -113,14 +105,12 @@ const Model = () => {
 								/>
 							</IconButton>
 
-							{/* Текущее изображение */}
 							<img
 								src={images[currentImageIndex]?.URL}
 								alt={`Image ${currentImageIndex + 1}`}
 								className='slider-image'
 							/>
 
-							{/* Стрелка вправо */}
 							<IconButton className='arrow-button' onClick={handleNextSlide}>
 								<ArrowRightIcon
 									sx={{
@@ -134,7 +124,6 @@ const Model = () => {
 						</Box>
 					)}
 				</Grid>
-
 				{/* Нижняя часть с информацией */}
 				<Grid bgcolor={'inherit'} item xs={12} className='model-info'>
 					<Paper
