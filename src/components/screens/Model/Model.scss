@@ -57,6 +57,10 @@
 	object-fit: contain; /* Изображение сохраняет пропорции внутри контейнера */
 	z-index: 1; /* Чтобы изображение не перекрывало стрелки */
 }
+.slider-image-wrapper {
+	width: 500px;
+	padding: 50px;
+}
 
 .arrow-button {
 	position: absolute;

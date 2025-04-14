@@ -1,34 +1,17 @@
 import { Button } from '@mui/material'
 import styles from './CardList.module.scss'
 import Card from '../Card/Card'
-import { useEffect, useState } from 'react'
 
 const CardList = ({ data, onLoadMore, isFetching, total }) => {
-	const [dataLength, setDataLength] = useState(0) // Состояние для хранения длины данных
-	console.log(data)
-	useEffect(() => {
-		if (data) {
-			setDataLength(data.length)
-		}
-	}, [data])
-
 	return (
 		<div>
 			<div className={styles.main__cards}>
-				{dataLength
-					? data?.map((item, index) => (
-							<Card
-								key={item.id}
-								data={item}
-								delayInSeconds={
-									dataLength ? (index - dataLength) * 0.3 : index * 0.3
-								}
-							/>
-					  ))
+				{data?.length
+					? data.map(item => <Card key={item.id} data={item} />)
 					: 'Models undefined'}
 			</div>
 
-			{data?.length > 0 && total - data?.length != 0 && (
+			{data?.length > 0 && total - data.length !== 0 && (
 				<div
 					style={{ width: '100%', textAlign: 'center', marginBottom: '20px' }}
 				>
@@ -38,7 +21,6 @@ const CardList = ({ data, onLoadMore, isFetching, total }) => {
 						variant='outlined'
 						disabled={isFetching}
 						fullWidth
-						color=''
 					>
 						{isFetching ? 'Загружается...' : 'Показать еще'}
 					</Button>

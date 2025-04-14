@@ -1,4 +1,3 @@
-import Layout from '../../layout/Layout'
 import ModelsVS from './homeUI/ModelsVS/ModelsVS'
 import Onas from './homeUI/Onas/Onas'
 import VidioUI from './homeUI/VidioUI/VidioUI'
@@ -30,14 +29,15 @@ function Home() {
 					content='Модельное агентство LEMAR: кастинги, фотосессии, обучение для моделей. Запишитесь на пробный урок и станьте профессиональной моделью! Школа моды Владимир. lemar-models'
 				/>
 			</Helmet>
-			<Layout>
-				<VidioUI />
+
+			<VidioUI />
+			<div style={{ maxWidth: '1280px', margin: '0 auto' }}>
 				<Onas />
 				<ServicesNew />
 				<ModelsVS />
 				<DetailedInformation />
 				<Employees />
-			</Layout>
+			</div>
 		</>
 	)
 }

@@ -1,17 +1,18 @@
 import { useState } from 'react'
 import './Header.scss'
 import useScrollTo from '../../../shared/hooks/useScrollTo'
+import { NavLink } from 'react-router-dom'
 
 const Header = ({ rr }) => {
 	const [burgerState, setBurgerState] = useState(false)
 
 	// Хуки для плавного скроллинга
-	const ToModals = useScrollTo('Modals')
-	const ToSignUp = useScrollTo('SignUp')
-	const ToOnas = useScrollTo('Onas')
-	const ToEmployees = useScrollTo('Employees')
-	const ToPartners = useScrollTo('Partners')
-	const ToServices = useScrollTo('Services')
+	const ToModals = useScrollTo('Modals', '/')
+	const ToSignUp = useScrollTo('SignUp', '/')
+	const ToOnas = useScrollTo('Onas', '/')
+	const ToEmployees = useScrollTo('Employees', '/')
+	const ToPartners = useScrollTo('Partners', '/')
+	const ToServices = useScrollTo('Services', '/')
 
 	// Обработчик для мобильного меню
 	const heandlerSwapBurger = () => {
@@ -45,7 +46,7 @@ const Header = ({ rr }) => {
 		<header id='header' className='header'>
 			<div className='container'>
 				<div className='header__body'>
-					<a href='/' className='header__logo'></a>
+					<NavLink to='/' className='header__logo'></NavLink>
 					<label className='hamburger'>
 						<input type='checkbox' onChange={() => heandlerSwapBurger()} />
 						<svg viewBox='0 0 32 32'>
@@ -59,76 +60,71 @@ const Header = ({ rr }) => {
 					<nav className={burgerState ? 'header__menu active' : 'header__menu'}>
 						<ul className='header__list'>
 							<li>
-								<a
-									onClick={e => {
-										e.preventDefault()
+								<NavLink
+									to={'/'}
+									onClick={() => {
 										ToModals()
 										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
 									База моделей
-								</a>
+								</NavLink>
 							</li>
 							<li>
-								<a
-									onClick={e => {
-										e.preventDefault()
+								<NavLink
+									onClick={() => {
 										ToSignUp()
 										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
 									Записаться
-								</a>
+								</NavLink>
 							</li>
 							<li>
-								<a
-									onClick={e => {
-										e.preventDefault()
+								<NavLink
+									onClick={() => {
 										ToOnas()
 										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
 									О нас
-								</a>
+								</NavLink>
 							</li>
 							<li>
-								<a
-									onClick={e => {
-										e.preventDefault()
+								<NavLink
+									onClick={() => {
 										ToEmployees()
 										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
 									Преподаватели
-								</a>
+								</NavLink>
 							</li>
 							<li>
-								<a
-									onClick={e => {
-										e.preventDefault()
+								<NavLink
+									onClick={() => {
 										ToPartners()
 										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
 									Партнерам
-								</a>
+								</NavLink>
 							</li>
 							<li>
-								<a
-									onClick={e => {
-										e.preventDefault()
+								<NavLink
+									onClick={() => {
 										ToServices()
 										closeBurgerMenu() // Закрыть меню
 									}}
 									className='header__link'
 								>
 									Наши услуги
-								</a>
+								</NavLink>
 							</li>
 						</ul>
 					</nav>

@@ -1,7 +1,15 @@
 import { useMemo, useState, useEffect, useRef } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useModel } from '../../../shared/api/axios-request'
-import { Box, Typography, IconButton, Grid, Paper, Button } from '@mui/material'
+import {
+	Box,
+	Typography,
+	IconButton,
+	Grid,
+	Paper,
+	Button,
+	CircularProgress
+} from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import CloseIcon from '@mui/icons-material/Close'
 import ArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
@@ -19,11 +27,17 @@ const Model = () => {
 
 	const [currentImageIndex, setCurrentImageIndex] = useState(0)
 	const [isVisible, setIsVisible] = useState(false)
-	const nodeRef = useRef(null) // 👈 Создаём ref
+	const [imageLoaded, setImageLoaded] = useState(false)
+
+	const nodeRef = useRef(null)
 
 	useEffect(() => {
 		setIsVisible(true)
 	}, [])
+
+	useEffect(() => {
+		setImageLoaded(false)
+	}, [currentImageIndex])
 
 	const handlePrevSlide = () => {
 		setCurrentImageIndex(prev => (prev === 0 ? images.length - 1 : prev - 1))
@@ -37,7 +51,7 @@ const Model = () => {
 
 	const handleClick = () => {
 		const phoneNumber = M_NUMBER
-		const message = `Здравствуйте, я хочу выбрать модель! Меня интересует ${model.FI} рост ${model.height}`
+		const message = `Здравствуйте, я хочу выбрать модель! Меня интересует ${model.FI}, рост ${model.height}`
 		const isMobile =
 			/Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(
 				navigator.userAgent
@@ -59,12 +73,10 @@ const Model = () => {
 			classNames='fade'
 			unmountOnExit
 			onExited={() => navigate(-1)}
-			nodeRef={nodeRef} // 👈 Передаём ref в CSSTransition
+			nodeRef={nodeRef}
 		>
 			<Grid ref={nodeRef} container className='model-container'>
-				{' '}
-				{/* 👈 Добавили ref в Grid */}
-				{/* Верхняя часть */}
+				{/* Header */}
 				<Grid item xs={12} className='model-header'>
 					<Box className='header-left'>
 						<Link onClick={handleClose} className='back-link'>
@@ -90,7 +102,8 @@ const Model = () => {
 						</IconButton>
 					</Box>
 				</Grid>
-				{/* Центральная часть с слайдером */}
+
+				{/* Slider */}
 				<Grid item xs={12} className='model-slider'>
 					{images?.length > 0 && (
 						<Box className='slider-container'>
@@ -105,11 +118,36 @@ const Model = () => {
 								/>
 							</IconButton>
 
-							<img
-								src={images[currentImageIndex]?.URL}
-								alt={`Image ${currentImageIndex + 1}`}
-								className='slider-image'
-							/>
+							<Box className='slider-image-wrapper'>
+								{!imageLoaded && (
+									<Box
+										sx={{
+											position: 'absolute',
+											top: '50%',
+											left: '50%',
+											transform: 'translate(-50%, -50%)',
+											zIndex: 2
+										}}
+									>
+										<CircularProgress />
+									</Box>
+								)}
+
+								<img
+									src={images[currentImageIndex]?.URL}
+									alt={`Image ${currentImageIndex + 1}`}
+									className='slider-image'
+									onLoad={() => setImageLoaded(true)}
+									onError={() => setImageLoaded(true)}
+									style={{
+										opacity: imageLoaded ? 1 : 0,
+										transition: 'opacity 0.3s ease-in-out',
+										width: '100%',
+										height: 'auto',
+										display: 'block'
+									}}
+								/>
+							</Box>
 
 							<IconButton className='arrow-button' onClick={handleNextSlide}>
 								<ArrowRightIcon
@@ -124,7 +162,8 @@ const Model = () => {
 						</Box>
 					)}
 				</Grid>
-				{/* Нижняя часть с информацией */}
+
+				{/* Info */}
 				<Grid bgcolor={'inherit'} item xs={12} className='model-info'>
 					<Paper
 						sx={{
@@ -135,6 +174,7 @@ const Model = () => {
 						className='model-info-paper'
 					>
 						<Typography variant='h5' className='model-info-title'>
+							<br />
 							{model?.FI?.split(' ')[1]
 								? model?.FI?.split(' ')[1]
 								: model?.FI?.split(' ')[0]}

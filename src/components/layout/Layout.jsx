@@ -1,21 +1,24 @@
 // import Header from './Header/Header'
-import cn from 'clsx'
-import styles from './Layout.module.scss'
-import Header from '../layout/Header/Header'
-import Footer from './Footer/Footer'
 
+import Header from './Header/Header'
+import Footer from './Footer/Footer'
+import { useLocation } from 'react-router-dom'
 // eslint-disable-next-line react/prop-types
-const Layout = ({ children, bgImage, heading = '' }) => {
+const Layout = ({ children, bgImage }) => {
+	const location = useLocation()
+	const hideHeader =
+		/^\/models\/female\/\d+/.test(location.pathname) ||
+		/^\/models\/male\/\d+/.test(location.pathname)
 	return (
 		<div>
+			{!hideHeader && <Header />}
 			<section
-				className={cn(styles.wrapper, { [styles.otherPage]: !!heading })}
+				// className={cn(styles.wrapper, { [styles.otherPage]: !!heading })}
 				style={{ backgroundImage: `url(${bgImage})` }}
 			>
-				<Header rr={screen == 'models' ? false : undefined} />
 				{children && <div>{children}</div>}
 			</section>
-			<Footer />
+			{!hideHeader && <Footer />}
 		</div>
 	)
 }

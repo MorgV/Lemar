@@ -1,37 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import classNames from 'clsx'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import React, { useState } from 'react'
 import styles from './style.module.scss'
 import { REACT_APP_API_URL } from '../../../../../utils/constans'
 
 const Card = React.memo(
-	({ data, delayInSeconds }) => {
+	({ data }) => {
 		const { height, FI, age, imageProfile, id } = data
-		const [isVisible, setIsVisible] = useState(false)
-
-		useEffect(() => {
-			const timeout = setTimeout(() => {
-				setIsVisible(true)
-			}, delayInSeconds * 1000)
-			return () => clearTimeout(timeout)
-		}, [delayInSeconds])
+		const [imageLoaded, setImageLoaded] = useState(false)
 
 		return (
-			<article
-				className={classNames(styles.card, { [styles.visible]: isVisible })}
-			>
+			<article className={styles.card}>
 				<a href={`${window.location.pathname}/${id}`} alt='Profile link'>
-					<LazyLoadImage
-						src={`${REACT_APP_API_URL}${imageProfile}`}
-						alt='Profile'
-						className={styles.img}
-						effect='blur' // Эффект размытия при загрузке
-					/>
-					<div className={styles.info}>
-						<p>{FI}</p>
-						<p>Возраст: {age}</p>
-						<p>Рост: {height} см</p>
+					<div className={styles.imageWrapper}>
+						{/* Показываем лоадер, пока изображение не загрузилось */}
+						{!imageLoaded && (
+							<div className={styles.loader}>
+								{/* Тут можно добавить лоадер, если нужно */}
+							</div>
+						)}
+
+						{/* Обычное изображение */}
+						<img
+							src={`${REACT_APP_API_URL}${imageProfile}`}
+							alt='Profile'
+							className={styles.img}
+							onLoad={() => setImageLoaded(true)} // Событие на загрузку
+							style={{
+								opacity: imageLoaded ? 1 : 0, // Применяем плавное появление
+								transition: 'opacity 0.3s ease-in-out'
+							}}
+						/>
 					</div>
+					{imageLoaded && (
+						<div className={styles.info}>
+							<p>{FI}</p>
+							<p>Возраст: {age}</p>
+							<p>Рост: {height} см</p>
+						</div>
+					)}
 				</a>
 			</article>
 		)

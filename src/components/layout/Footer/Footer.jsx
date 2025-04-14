@@ -4,6 +4,7 @@ import { HOME_ROUTE } from '../../../utils/constans'
 import { FaEnvelope, FaVk, FaWhatsapp } from 'react-icons/fa'
 import useScrollTo from '../../../shared/hooks/useScrollTo'
 import useWhatsApp from '../../../shared/hooks/useWhatsApp'
+import { NavLink } from 'react-router-dom'
 
 const LazyMap = () => {
 	const [isMapLoaded, setIsMapLoaded] = useState(false)
@@ -101,6 +102,7 @@ const LazyMap = () => {
 }
 
 const Footer = () => {
+	console.log('FooterRender')
 	const message =
 		'Добрый день! Меня заинтересовало обучение в Школе Моды и творчества Lemar'
 	const openWhatsApp = useWhatsApp({ message })
@@ -116,43 +118,43 @@ const Footer = () => {
 		<footer className={styles.footer}>
 			<LazyMap />
 			<div className={styles.container}>
-				<a className={styles.logoSection} href={HOME_ROUTE}></a>
+				<NavLink className={styles.logoSection} to={HOME_ROUTE}></NavLink>
 				<div className={styles.contacts}>
 					<h3>Контакты</h3>
 					<p>
-						<a href='tel:+79209079927'>+7 910 677-10-60</a>
+						<NavLink to='tel:+79209079927'>+7 910 677-10-60</NavLink>
 					</p>
 					<p>
-						<a href='tel:+79209079927'>+7 920 907-99-27</a>
+						<NavLink to='tel:+79209079927'>+7 920 907-99-27</NavLink>
 					</p>
 					<div className={styles.icons}>
-						<a
-							href='mailto:Mariya-legotina@yandex.ru'
+						<NavLink
+							to='mailto:Mariya-legotina@yandex.ru'
 							target='_blank'
 							rel='noopener noreferrer'
 						>
 							<FaEnvelope />
-						</a>
-						<a
-							href='https://vk.com/lemar_models'
+						</NavLink>
+						<NavLink
+							to='https://vk.com/lemar_models'
 							target='_blank'
 							rel='noopener noreferrer'
 						>
 							<FaVk />
-						</a>
-						<a onClick={openWhatsApp}>
+						</NavLink>
+						<NavLink onClick={openWhatsApp}>
 							<FaWhatsapp />
-						</a>
+						</NavLink>
 					</div>
 				</div>
 				<nav className={styles.navLinks}>
 					<h3>Навигация</h3>
-					<a onClick={ToModals}>База моделей</a>
-					<a onClick={ToSignUp}>Записаться</a>
-					<a onClick={ToOnas}>О нас</a>
-					<a onClick={ToEmployees}>Преподаватели</a>
-					<a onClick={ToPartners}>Партнерам</a>
-					<a onClick={ToServices}>Наши услуги</a>
+					<NavLink onClick={ToModals}>База моделей</NavLink>
+					<NavLink onClick={ToSignUp}>Записаться</NavLink>
+					<NavLink onClick={ToOnas}>О нас</NavLink>
+					<NavLink onClick={ToEmployees}>Преподаватели</NavLink>
+					<NavLink onClick={ToPartners}>Партнерам</NavLink>
+					<NavLink onClick={ToServices}>Наши услуги</NavLink>
 				</nav>
 			</div>
 		</footer>
