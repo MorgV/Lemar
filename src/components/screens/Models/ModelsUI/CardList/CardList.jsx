@@ -21,6 +21,7 @@ const CardList = ({ data, onLoadMore, isFetching, total }) => {
 						variant='outlined'
 						disabled={isFetching}
 						fullWidth
+						color='111'
 					>
 						{isFetching ? 'Загружается...' : 'Показать еще'}
 					</Button>
