@@ -117,6 +117,13 @@
 	transition: opacity 300ms, transform 300ms;
 }
 
+@media (max-width:'1000px') {
+	.slider-image-wrapper {
+		max-width: 400px;
+		padding: 25px;
+	}
+}
+
 @media (max-width: '600px') {
 	.arrow-button {
 		position: relative;
@@ -129,4 +136,9 @@
 	.arrow-button:last-of-type {
 		right: 50px; /* Стрелка справа */
 	}
+	.slider-image-wrapper {
+		min-width: 300px;
+		padding: auto;
+	}
+
 }
