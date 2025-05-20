@@ -13,13 +13,11 @@ import theme from './utils/them'
 
 createRoot(document.getElementById('root')).render(
 	<HelmetProvider>
-		<StrictMode>
-			<QueryClientProvider client={queryClient}>
-				<ThemeProvider theme={theme}>
-					<Router />
-					<ReactQueryDevtools />
-				</ThemeProvider>
-			</QueryClientProvider>
-		</StrictMode>
+		<QueryClientProvider client={queryClient}>
+			<ThemeProvider theme={theme}>
+				<Router />
+				<ReactQueryDevtools />
+			</ThemeProvider>
+		</QueryClientProvider>
 	</HelmetProvider>
 )

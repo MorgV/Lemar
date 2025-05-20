@@ -39,8 +39,7 @@ const plans = [
 ]
 
 const ServicesNew = () => {
-	// Создаем рефы для элементов, которые должны анимироваться
-
+	console.log('Services render')
 	return (
 		<Box id='Services' className='servicesContainer'>
 			{/* Заголовок, который анимируется при появлении на экране */}

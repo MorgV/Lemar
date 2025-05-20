@@ -10,6 +10,7 @@ import Button from '../../../../UI/Button/Button'
 import useWhatsApp from '../../../../../shared/hooks/useWhatsApp'
 
 const DetailedInformation = () => {
+	console.log('DetailedInformation render')
 	const swiperRef = useRef(null)
 	const openWhatsApp = useWhatsApp({
 		message:

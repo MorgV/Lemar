@@ -3,6 +3,7 @@ import styles from './ModelsVS.module.scss'
 
 function ModelsVS() {
 	// const { isAuth } = useAuth()
+	console.log('Models render')
 	return (
 		<div id='Modals' className={styles.wrapper}>
 			<TitleSubtitle titleText='Наши модели' />

@@ -1,15 +1,20 @@
-import ModelsVS from './homeUI/ModelsVS/ModelsVS'
-import Onas from './homeUI/Onas/Onas'
-import VidioUI from './homeUI/VidioUI/VidioUI'
-// import Services from './homeUI/Services/Services'
-import ServicesNew from './homeUI/ServicesNew/ServicesNew'
-import Employees from './homeUI/Employees/Employees'
-import DetailedInformation from './homeUI/DetailedInformation/DetailedInformation'
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-function Home() {
+import { useLocation } from 'react-router-dom'
+import Layout from '../../layout/Layout'
+
+export const HomePageLayout = ({
+	VidioUI,
+	Onas,
+	ServicesNew,
+	ModelsVS,
+	DetailedInformation,
+	Employees
+}) => {
 	const location = useLocation()
+	console.log('render HOME layout')
+
+	// TODO: HomeLayout - Бизнес вынести scroll
 
 	useEffect(() => {
 		if (location.state?.scrollToId) {
@@ -19,7 +24,6 @@ function Home() {
 			}
 		}
 	}, [location])
-
 	return (
 		<>
 			<Helmet>
@@ -29,17 +33,14 @@ function Home() {
 					content='Модельное агентство LEMAR: кастинги, фотосессии, обучение для моделей. Запишитесь на пробный урок и станьте профессиональной моделью! Школа моды Владимир. lemar-models'
 				/>
 			</Helmet>
-
-			<VidioUI />
-			<div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-				<Onas />
-				<ServicesNew />
-				<ModelsVS />
-				<DetailedInformation />
-				<Employees />
-			</div>
+			{VidioUI}
+			<Layout>
+				{Onas}
+				{ServicesNew}
+				{ModelsVS}
+				{DetailedInformation}
+				{Employees}
+			</Layout>
 		</>
 	)
 }
-
-export default Home

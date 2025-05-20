@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles'
-import colors from 'vuetify/lib/util/colors'
+
 const theme = createTheme({
 	palette: {
 		text: {

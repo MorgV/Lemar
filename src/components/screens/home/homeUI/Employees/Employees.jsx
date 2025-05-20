@@ -69,6 +69,7 @@ const employeesInformation = [
 	}
 ]
 const Employees = () => {
+	console.log('Employes render')
 	const [selectedEmployee, setSelectedEmployee] = useState(null)
 	const [isModalOpen, setIsModalOpen] = useState(false)
 

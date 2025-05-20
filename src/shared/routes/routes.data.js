@@ -1,4 +1,4 @@
-import Home from '../../components/screens/Home/Home.jsx'
+import Home from '../../components/screens/home/HomePage.jsx'
 import Models from '../../components/screens/Models/Models.jsx'
 import Auth from '../../components/screens/Auth/Auth.jsx'
 import Admin from '../../components/screens/Admin/Admin.jsx'

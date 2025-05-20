@@ -10,16 +10,18 @@ const Layout = ({ children, bgImage }) => {
 		/^\/models\/female\/\d+/.test(location.pathname) ||
 		/^\/models\/male\/\d+/.test(location.pathname)
 	return (
-		<div>
-			{!hideHeader && <Header />}
-			<section
-				// className={cn(styles.wrapper, { [styles.otherPage]: !!heading })}
-				style={{ backgroundImage: `url(${bgImage})` }}
-			>
-				{children && <div>{children}</div>}
-			</section>
+		<>
+			<div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+				{!hideHeader && <Header />}
+				<section
+					// className={cn(styles.wrapper, { [styles.otherPage]: !!heading })}
+					style={{ backgroundImage: `url(${bgImage})` }}
+				>
+					{children && <div>{children}</div>}
+				</section>
+			</div>
 			{!hideHeader && <Footer />}
-		</div>
+		</>
 	)
 }
 
