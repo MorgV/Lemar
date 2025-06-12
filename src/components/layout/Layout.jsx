@@ -13,10 +13,7 @@ const Layout = ({ children, bgImage }) => {
 		<>
 			<div style={{ maxWidth: '1280px', margin: '0 auto' }}>
 				{!hideHeader && <Header />}
-				<section
-					// className={cn(styles.wrapper, { [styles.otherPage]: !!heading })}
-					style={{ backgroundImage: `url(${bgImage})` }}
-				>
+				<section style={{ backgroundImage: `url(${bgImage})` }}>
 					{children && <div>{children}</div>}
 				</section>
 			</div>

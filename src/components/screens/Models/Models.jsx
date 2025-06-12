@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { modelsClient } from '../../../shared/api/axios-request'
-import Layout from '../../layout/Layout'
-import styles from './Models.module.scss'
-import CardList from './ModelsUI/CardList/CardList'
 import SearchInput from '../Admin/AdminUI/SearchInput/SearchInput'
-import { Button, Stack, Chip } from '@mui/material'
 import FilterDrawer from './ModelsUI/FilterDrawer/FilterDrawer'
 import { useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { debounce } from 'lodash'
+import { ModelsLayout } from './ModelsLayout'
+import ButtonsFilter from './ModelsUI/Filters/ButtonsFilter'
+import ChipsFilter from './ModelsUI/Filters/ChipsFilter'
+import ModelsList from './ModelsUI/ModelsList/ModelsList'
 
 function Models() {
 	console.log('render models')
+	// TODO: Вынести бизнес логику
+	// TODO: оптимизировать элементы
 	const { category } = useParams() // category = 'boys' или 'girls'
 	const [tableParams, setTableParams] = useState({
 		page: 0,
@@ -124,139 +126,53 @@ function Models() {
 					content='LEMAR,модели кастинги, фотосессии, обучение для моделей. Запишитесь на пробный урок и станьте профессиональной моделью! Школа моды Владимир. lemar-models, модели во Владимире'
 				/>
 			</Helmet>
-
-			<main className={styles.main}>
-				<SearchInput
-					searchQuery={searchQuery}
-					setSearchQuery={setSearchQuery}
-					onChange={handleSearchChange} // Передаем функцию для изменения searchQuery
-				/>
-
-				<Stack
-					direction={{ xs: 'column', sm: 'row' }} // Вертикально для маленьких экранов
-					spacing={2}
-					marginY={2}
-					alignItems='center'
-					justifyContent={{ xs: 'center', sm: 'space-between' }} // Центрирование на мобилках
-					width='100%'
-				>
-					<Button
-						variant='contained'
-						sx={{
-							color: '#fff',
-							backgroundColor: gender !== 'female' ? '#01959f' : '#d95a8c',
-							width: { xs: '100%', sm: 'auto' }, // 100% ширины на мобильных
-							'&:hover': {
-								backgroundColor: '#01b2bf',
-								color: '#fff',
-								transform: 'scale(1.05)',
-								transition: 'all 0.3s ease'
-							}
-						}}
-						onClick={toggleDrawer(true)}
-					>
-						Фильтрация
-					</Button>
-
-					<Stack
-						direction={{ xs: 'column', sm: 'row' }} // Кнопки вертикально на мобилках
-						spacing={2}
-						width={{ xs: '100%', sm: 'auto' }}
-					>
-						<Button
-							variant={gender === 'male' ? 'contained' : 'outlined'}
-							sx={{
-								color: '#fff',
-								bgcolor: gender === 'male' ? '#01959f' : 'transparent',
-								borderColor: '#01959f',
-								width: { xs: '100%', sm: 'auto' }, // 100% ширины на мобильных
-								'&:hover': {
-									backgroundColor: '#01b2bf',
-									color: '#fff',
-									transform: 'scale(1.05)',
-									transition: 'all 0.3s ease'
-								}
-							}}
-							onClick={() => handleGenderChange('male')}
-						>
-							Мальчики
-						</Button>
-
-						<Button
-							variant={gender === 'female' ? 'contained' : 'outlined'}
-							sx={{
-								color: '#fff',
-								bgcolor: gender === 'female' ? '#d95a8c' : 'transparent',
-								borderColor: '#d95a8c',
-								width: { xs: '100%', sm: 'auto' }, // 100% ширины на мобильных
-								'&:hover': {
-									backgroundColor: '#e57399',
-									color: '#fff',
-									transform: 'scale(1.05)',
-									transition: 'all 0.3s ease'
-								}
-							}}
-							onClick={() => handleGenderChange('female')}
-						>
-							Девочки
-						</Button>
-					</Stack>
-				</Stack>
-
-				<Stack
-					direction='row'
-					flexWrap='wrap'
-					margin={'10px 0 20px 0'}
-					gap={'10px'}
-				>
-					{Object.entries(filters).map(([filterType, values]) =>
-						values.map(value => (
-							<Chip
-								key={`${filterType}-${value}`} // Исправили эту строку
-								label={`${filterLabels[filterType]}: ${value}`} // Исправили эту строку
-								onDelete={() => handleDeleteChip(filterType, value)}
-								sx={{
-									backgroundColor: gender !== 'female' ? '#01959f' : '#d95a8c',
-									color: '#fff',
-									'& .MuiChip-deleteIcon': {
-										color: '#fff',
-										'&:hover':
-											gender !== 'female'
-												? { color: '#b53471' }
-												: { color: '#01959f' }
-									}
-								}}
-							/>
-						))
-					)}
-				</Stack>
-
-				<FilterDrawer
-					isOpen={isDrawerOpen}
-					onClose={toggleDrawer(false)}
-					heightOptions={heightOptions}
-					shoeSizeOptions={shoeSizeOptions}
-					ageOptions={ageOptions}
-					onFilterChange={handleFilterChange}
-					filters={filters}
-					gender={gender}
-				/>
-
-				<div className='container'>
-					{isLoading ? (
-						<div>Loading...</div>
-					) : isError ? (
-						<div>Error: {error.message}</div>
-					) : (
-						<CardList
-							data={data?.models}
-							total={data?.total}
-							onLoadMore={loadMore}
-							isFetching={isFetching}
-						/>
-					)}
-				</div>
-			</main>
+			<ModelsLayout
+				search={
+					<SearchInput
+						searchQuery={searchQuery}
+						setSearchQuery={setSearchQuery}
+						onChange={handleSearchChange} // Передаем функцию для изменения searchQuery
+					/>
+				}
+				buttons={
+					<ButtonsFilter
+						gender={gender}
+						toggleDrawer={toggleDrawer}
+						handleGenderChange={handleGenderChange}
+					/>
+				}
+				chips={
+					<ChipsFilter
+						filterLabels={filterLabels}
+						gender={gender}
+						filters={filters}
+						handleDeleteChip={handleDeleteChip}
+					/>
+				}
+				filterDrawer={
+					<FilterDrawer
+						key={gender}
+						isOpen={isDrawerOpen}
+						onClose={toggleDrawer(false)}
+						heightOptions={heightOptions}
+						shoeSizeOptions={shoeSizeOptions}
+						ageOptions={ageOptions}
+						onFilterChange={handleFilterChange}
+						filters={filters}
+						gender={gender}
+					/>
+				}
+				modelsList={
+					<ModelsList
+						data={data}
+						error={error}
+						isError={isError}
+						isFetching={isFetching}
+						isLoading={isLoading}
+						loadMore={loadMore}
+					/>
+				}
+			/>
 		</>
 	)
 }

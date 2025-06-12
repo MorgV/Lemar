@@ -6,7 +6,7 @@ import Employees from './homeUI/Employees/Employees'
 import DetailedInformation from './homeUI/DetailedInformation/DetailedInformation'
 import { HomePageLayout } from './HomePageLayout'
 function HomePage() {
-	console.log('render HomePage')
+	console.log('render HP')
 	return (
 		<HomePageLayout
 			VidioUI={<VidioUI />}

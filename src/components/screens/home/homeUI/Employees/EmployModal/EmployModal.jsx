@@ -1,16 +1,28 @@
-import { Box, Modal, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import styles from './EmployModal.module.scss'
-import CloseIcon from '@mui/icons-material/Close'
+import { ModalUI } from '../../../../../UI/modal/Modal'
 
 const EmployeeModal = ({ employee, onClose }) => {
 	return (
-		<Modal open={open} onClose={onClose} className={styles.modal}>
-			<Box className={styles.modalContent}>
-				{/* Close Button */}
-				<div className={styles.closeButton} onClick={onClose}>
-					<CloseIcon className={styles.closeButtonButton} />
-				</div>
+		<ModalUI
+			className={styles.modalContent}
+			isOpen={!!employee}
+			handleClose={onClose}
+			bodyModal={
+				<>
+					<Typography variant='h6' className={styles.modalTitle}>
+						{employee.name}
+					</Typography>
+					<Typography className={styles.modalPrice}>
+						{employee.position}
+					</Typography>
 
+					<Typography className={styles.modalDescription}>
+						{employee.bio}
+					</Typography>
+				</>
+			}
+			headerModal={
 				<Box className={styles.modalIcon}>
 					<img
 						src={employee.employImg}
@@ -18,18 +30,8 @@ const EmployeeModal = ({ employee, onClose }) => {
 						className={styles.modalIconImage}
 					/>
 				</Box>
-				<Typography variant='h6' className={styles.modalTitle}>
-					{employee.name}
-				</Typography>
-				<Typography className={styles.modalPrice}>
-					{employee.position}
-				</Typography>
-
-				<Typography className={styles.modalDescription}>
-					{employee.bio}
-				</Typography>
-			</Box>
-		</Modal>
+			}
+		/>
 	)
 }
 

@@ -1,6 +1,4 @@
-import { useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { useLocation } from 'react-router-dom'
 import Layout from '../../layout/Layout'
 
 export const HomePageLayout = ({
@@ -11,19 +9,7 @@ export const HomePageLayout = ({
 	DetailedInformation,
 	Employees
 }) => {
-	const location = useLocation()
 	console.log('render HOME layout')
-
-	// TODO: HomeLayout - Бизнес вынести scroll
-
-	useEffect(() => {
-		if (location.state?.scrollToId) {
-			const element = document.getElementById(location.state.scrollToId)
-			if (element) {
-				element.scrollIntoView({ behavior: 'smooth' })
-			}
-		}
-	}, [location])
 	return (
 		<>
 			<Helmet>

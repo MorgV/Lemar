@@ -10,7 +10,6 @@ const Router = () => {
 		<BrowserRouter>
 			<Routes>
 				{routes.map(route => {
-					console.log(route)
 					return (
 						<Route
 							key={route.path}

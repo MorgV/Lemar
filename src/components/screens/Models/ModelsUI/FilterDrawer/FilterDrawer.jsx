@@ -36,7 +36,9 @@ const FilterDrawer = ({
 	const toggleHeight = () => setIsHeightOpen(prev => !prev)
 	const toggleShoeSize = () => setIsShoeSizeOpen(prev => !prev)
 	const toggleAge = () => setIsAgeOpen(prev => !prev)
-
+	if (!isOpen) return null
+	console.log('RENDER DRAWER')
+	// TODO:  оптимизировать рендер Drawer
 	const renderFilterSection = (
 		title,
 		options,
@@ -67,7 +69,7 @@ const FilterDrawer = ({
 			<Collapse in={isOpen}>
 				<List>
 					{options.map(option => (
-						<ListItem key={option} button className={styles.listItem}>
+						<ListItem key={option} className={styles.listItem}>
 							<FormControlLabel
 								control={
 									<Checkbox

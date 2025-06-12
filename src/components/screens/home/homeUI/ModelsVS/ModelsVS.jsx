@@ -1,19 +1,18 @@
+import { NavLink } from 'react-router-dom'
 import TitleSubtitle from '../../../../UI/TitleSubtitle/TitleSubtitle'
 import styles from './ModelsVS.module.scss'
 
 function ModelsVS() {
-	// const { isAuth } = useAuth()
-	console.log('Models render')
 	return (
 		<div id='Modals' className={styles.wrapper}>
 			<TitleSubtitle titleText='Наши модели' />
 			<div className={styles.vs}>
-				<a href='/models/male' className={styles.boy}>
+				<NavLink to='/models/male' className={styles.boy}>
 					<h1>Boys</h1>
-				</a>
-				<a href='/models/female' className={styles.girl}>
+				</NavLink>
+				<NavLink to='/models/female' className={styles.girl}>
 					<h1>Girls</h1>
-				</a>
+				</NavLink>
 			</div>
 		</div>
 	)

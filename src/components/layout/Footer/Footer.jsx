@@ -102,7 +102,6 @@ const LazyMap = () => {
 }
 
 const Footer = () => {
-	console.log('FooterRender')
 	const message =
 		'Добрый день! Меня заинтересовало обучение в Школе Моды и творчества Lemar'
 	const openWhatsApp = useWhatsApp({ message })

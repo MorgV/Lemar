@@ -7,7 +7,6 @@ function VidioUI() {
 		message:
 			'Добрый день! Меня заинтересовало обучение в Школе Моды и творчества Lemar'
 	})
-
 	return (
 		<div id='SignUp' className={styles.home}>
 			<video

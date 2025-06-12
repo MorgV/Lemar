@@ -1,16 +1,9 @@
-import { useState } from 'react'
-import {
-	Card,
-	CardContent,
-	Typography,
-	Box,
-	Modal,
-	IconButton
-} from '@mui/material'
-import CloseIcon from '@mui/icons-material/Close'
+import { useMemo, useState } from 'react'
+import { Card, CardContent, Typography, Box } from '@mui/material'
 import RequestButton from '../../../../../UI/Button/Button'
 import useWhatsApp from '../../../../../../shared/hooks/useWhatsApp'
 import styles from './CardPlan.module.scss'
+import { ModalUI } from '../../../../../UI/modal/Modal'
 
 const CardPlan = ({ name, price, description, icon }) => {
 	const [open, setOpen] = useState(false)
@@ -24,41 +17,53 @@ const CardPlan = ({ name, price, description, icon }) => {
 
 	return (
 		<>
-			<Card className={styles.card} style={{ borderRadius: '20px' }}>
-				<CardContent className={styles.cardContent}>
-					<Box className={styles.icon}>
-						<img src={icon} alt='plan-icon' className={styles.iconImage} />
-					</Box>
-					<h2 className={styles.title}>{name}</h2>
-					<p className={styles.description}>{description}</p>
-					<div style={{ marginTop: '30px' }}>
-						<RequestButton
-							text='Подробнее'
-							className={styles.button}
-							onClick={handleOpen}
-						/>
+			{useMemo(
+				() => (
+					<Card className={styles.card} style={{ borderRadius: '20px' }}>
+						<CardContent className={styles.cardContent}>
+							<Box className={styles.icon}>
+								<img src={icon} alt='plan-icon' className={styles.iconImage} />
+							</Box>
+							<h2 className={styles.title}>{name}</h2>
+							<p className={styles.description}>{description}</p>
+							<div style={{ marginTop: '30px' }}>
+								<RequestButton
+									text='Подробнее'
+									className={styles.button}
+									onClick={handleOpen}
+								/>
+							</div>
+						</CardContent>
+					</Card>
+				),
+				[]
+			)}
+			<ModalUI
+				isOpen={open}
+				handleClose={handleClose}
+				headerModal={
+					<div>
+						<Box className={styles.modalIcon}>
+							<img
+								src={icon}
+								alt='plan-icon'
+								className={styles.modalIconImage}
+							/>
+						</Box>
 					</div>
-				</CardContent>
-			</Card>
-
-			{/* Modal */}
-			<Modal open={open} onClose={handleClose} className={styles.modal}>
-				<Box className={styles.modalContent}>
-					{/* Close Button */}
-					<div className={styles.closeButton} onClick={handleClose}>
-						<CloseIcon fontSize='40px' className={styles.closeButtonButton} />
+				}
+				bodyModal={
+					<div>
+						<Typography variant='h6' className={styles.modalTitle}>
+							{name}
+						</Typography>
+						<Typography className={styles.modalDescription}>
+							{description}
+						</Typography>
+						<Typography className={styles.modalPrice}>{price}</Typography>
 					</div>
-
-					<Box className={styles.modalIcon}>
-						<img src={icon} alt='plan-icon' className={styles.modalIconImage} />
-					</Box>
-					<Typography variant='h6' className={styles.modalTitle}>
-						{name}
-					</Typography>
-					<Typography className={styles.modalDescription}>
-						{description}
-					</Typography>
-					<Typography className={styles.modalPrice}>{price}</Typography>
+				}
+				footerModal={
 					<div style={{ marginTop: '20px' }}>
 						<RequestButton
 							text='Оставить заявку'
@@ -66,8 +71,8 @@ const CardPlan = ({ name, price, description, icon }) => {
 							onClick={openWhatsApp}
 						/>
 					</div>
-				</Box>
-			</Modal>
+				}
+			/>
 		</>
 	)
 }

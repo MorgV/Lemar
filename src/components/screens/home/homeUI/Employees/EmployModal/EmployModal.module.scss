@@ -65,7 +65,7 @@ $gray: #717171;
 
 .modalDescription {
 	margin-top: 16px;
-	font-size: 1rem;
+	// font-size: 1rem;
 	color: $white;
 	text-align: center;
 }
@@ -91,7 +91,7 @@ $gray: #717171;
 	.modalContent {
 		max-width: 300px; /* Максимальная ширина модалки */
 		.modalDescription {
-			font-size: 0.7rem;
+			// font-size: 0.7rem;
 		}
 	}
 }
@@ -139,7 +139,7 @@ $gray: #717171;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
-		font-size: 1rem;
+		// font-size: 1rem;
 		padding: 0 15px;
 		overflow-y: auto; /* Если текст длинный, включается скролл */
 	}
